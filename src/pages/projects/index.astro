@@ -48,7 +48,9 @@ const projectList = projects.filter(
                     >
                       {project.data.title}
                     </a>
-                    <FormattedDate date={project.data.pubDate} />
+                    <div>
+                      <FormattedDate date={project.data.pubDate} />
+                    </div>
                     <p class="mt-2 text-lg mb-1">{project.data.description}</p>
                     <ul class="flex gap-x-4">
                       {project.data.technologies?.map((tag: string) => (

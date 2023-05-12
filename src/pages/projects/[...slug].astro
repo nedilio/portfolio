@@ -13,7 +13,6 @@ type Props = CollectionEntry<"projects">;
 
 const project = Astro.props;
 const { Content } = await project.render();
-console.log(Content);
 ---
 
 <BlogPost {...project.data}>
