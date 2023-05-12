@@ -14,5 +14,5 @@ I used React with Next.js and TypeScript. A challenge was to use JavaScript's Lo
 
 ## Enlaces
 
-- [Repo](https://github.com/nedilio/next-holiday)
-- [Deploy](https://next-holiday.vercel.app/)
+- [Repo](https://github.com/nedilio/currency-app)
+- [Deploy](https://currency-app-pink.vercel.app/)

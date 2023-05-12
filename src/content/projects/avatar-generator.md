@@ -15,5 +15,5 @@ Developed in React and uses a Dropzone to upload the file.
 
 ## Enlaces
 
-- [Repo](https://github.com/nedilio/next-holiday)
+- [Repo](https://github.com/nedilio/avatar-generator-cloudinary)
 - [Deploy](https://avatar-generator-cloudinary.vercel.app/)
