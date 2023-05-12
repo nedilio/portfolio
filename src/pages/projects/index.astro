@@ -1,0 +1,88 @@
+---
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import { getCollection } from "astro:content";
+import FormattedDate from "../../components/FormattedDate.astro";
+import Layout from "../../layouts/Layout.astro";
+
+const projects = (await getCollection("projects")).sort((a, b) =>
+  b.data.pubDate.localeCompare(a.data.pubDate)
+);
+
+const projectList = projects.filter(
+  (project) =>
+    project.id !== "using-mdx.mdx" && project.id !== "markdown-style-guide.md"
+);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <!-- <style>
+			ul {
+				list-style-type: none;
+				padding: unset;
+			}
+			ul li {
+				display: flex;
+			}
+			ul li :global(time) {
+				flex: 0 0 130px;
+				font-style: italic;
+				color: #595959;
+			}
+			ul li a:visited {
+				color: #8e32dc;
+			}
+		</style> -->
+  </head>
+  <body>
+    <Header />
+    <Layout>
+      <section>
+        <ul>
+          {
+            projectList.map((project) => (
+              <li class="mb-4">
+                <div class="flex gap-x-12">
+                  <a
+                    href={`/projects/${project.slug}/`}
+                    class="inline-block w-1/2 hover:scale-105 transition-transform"
+                  >
+                    <img
+                      src={project.data.heroImage}
+                      alt={project.data.title}
+                      class="rounded-2xl aspect-video object-cover"
+                    />
+                  </a>
+                  <div>
+                    <a
+                      href={`/projects/${project.slug}/`}
+                      class="hover: underline underline-offset-2"
+                    >
+                      <h3 class="font-bold text-2xl">{project.data.title}</h3>
+                    </a>
+                    <FormattedDate date={new Date(project.data.pubDate)} />
+                    <p class="mt-2 text-lg mb-1">{project.data.description}</p>
+                    <ul class="flex gap-x-4">
+                      {project.data.technologies?.map((tag: string) => (
+                        <li class="text-xs leading-none bg-gray-800 text-white px-3 py-1 rounded-md">
+                          {tag}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    </Layout>
+
+    <Footer />
+  </body>
+</html>

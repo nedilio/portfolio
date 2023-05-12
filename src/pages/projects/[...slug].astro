@@ -1,0 +1,30 @@
+---
+import { CollectionEntry, getCollection } from "astro:content";
+import BlogPost from "../../layouts/BlogPost.astro";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: project,
+  }));
+}
+type Props = CollectionEntry<"projects">;
+
+const project = Astro.props;
+const { Content } = await project.render();
+console.log(Content);
+---
+
+<BlogPost {...project.data}>
+  <ul class="flex gap-2 mt-4">
+    {
+      project.data.technologies?.map((tech: string) => (
+        <li class="bg-black text-yellow-100 inline-block px-3 py-1 text-xs rounded-full">
+          {tech}
+        </li>
+      ))
+    }
+  </ul>
+  <Content />
+</BlogPost>
