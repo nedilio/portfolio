@@ -17,10 +17,10 @@ console.log(Content);
 ---
 
 <BlogPost {...project.data}>
-  <ul class="flex gap-2 mt-4">
+  <ul class="flex gap-2 mt-4 mb-2">
     {
       project.data.technologies?.map((tech: string) => (
-        <li class="bg-black text-yellow-100 inline-block px-3 py-1 text-xs rounded-full">
+        <li class="bg-black text-white inline-block px-3 py-1 text-xs rounded-full">
           {tech}
         </li>
       ))

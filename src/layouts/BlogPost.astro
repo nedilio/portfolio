@@ -33,7 +33,8 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 
   <body>
     <Header />
-    <main class="container w-1/3 mx-auto mt-4">
+    <main class="container w-[90%] lg:w-3/4 mx-auto mt-4">
+      <a href="/Projects">🔙 Back to Projects</a>
       <article>
         <h1 class="title">{title}</h1>
         <FormattedDate date={new Date(pubDate)} />
