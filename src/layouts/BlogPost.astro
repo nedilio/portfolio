@@ -4,6 +4,7 @@ import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import FormattedDate from "../components/FormattedDate.astro";
+import ThemeLayout from "./ThemeLayout.astro";
 
 type Props = CollectionEntry<"projects">["data"];
 
@@ -30,8 +31,8 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
       }
     </style>
   </head>
-
-  <body>
+  <ThemeLayout />
+  <body class="dark:bg-gray-800 dark:text-slate-50">
     <Header />
     <main class="container w-[90%] lg:w-3/4 mx-auto mt-4">
       <a href="/projects">🔙 Back to Projects</a>
