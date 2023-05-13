@@ -4,7 +4,7 @@ description: "Another currency app"
 pubDate: "2023-05-11 00:00:00"
 heroImage: "/projects/currency-app-2.png"
 technologies:
-  - "react"
+  - "React"
   - "Next.js"
   - "TypeScript"
 repoURL: "https://github.com/nedilio/currency-app"

@@ -4,7 +4,7 @@ description: "Currency App"
 pubDate: "2022-09-26 00:00:00"
 heroImage: "/projects/currency-travel.jpg"
 technologies:
-  - "react"
+  - "React"
   - "API"
 repoURL: "https://github.com/nedilio/mxn-to-clp"
 deployURL: "https://mxn-to-clp.netlify.app/"
