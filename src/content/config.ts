@@ -16,6 +16,8 @@ const projects = defineCollection({
       .transform((str) => (str ? new Date(str) : undefined)),
     heroImage: z.string().optional(),
     technologies: z.array(z.string()).optional(),
+    deployURL: z.string(),
+    repoURL: z.string(),
   }),
 });
 

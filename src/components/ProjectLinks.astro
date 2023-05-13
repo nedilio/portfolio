@@ -1,0 +1,25 @@
+﻿---
+interface Props {
+  repoURL: string;
+  deployURL: string;
+}
+const { repoURL, deployURL } = Astro.props;
+---
+
+<div class="mt-4">
+  <h3 class="dark:text-white">Links</h3>
+  <div class="flex gap-x-2">
+    <a
+      href={deployURL}
+      target="_blank"
+      class="text-violet-600 underline underline-offset-4 hover:no-underline inline-block grow-0"
+      >💻 View live app</a
+    >
+    <a
+      href={repoURL}
+      target="_blank"
+      class="text-violet-600 underline underline-offset-4 hover:no-underline inline-block grow-0"
+      >👨‍💻 Check out the code</a
+    >
+  </div>
+</div>

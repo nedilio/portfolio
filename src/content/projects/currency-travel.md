@@ -6,12 +6,9 @@ heroImage: "/projects/currency-travel.jpg"
 technologies:
   - "react"
   - "API"
+repoURL: "https://github.com/nedilio/mxn-to-clp"
+deployURL: "https://mxn-to-clp.netlify.app/"
 ---
 
 App that i used on a travel to Argentina, to compare expenses in my contry currency (Chile). Then adapted to do the same for Mexico.
 Developed in React and using RapidAPI to get exchange values.
-
-## Enlaces
-
-- [Repo](https://github.com/nedilio/mxn-to-clp)
-- [Deploy](https://mxn-to-clp.netlify.app/)

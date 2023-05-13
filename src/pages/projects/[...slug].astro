@@ -1,6 +1,8 @@
 ---
 import { CollectionEntry, getCollection } from "astro:content";
 import BlogPost from "../../layouts/BlogPost.astro";
+import ProjectLinks from "../../components/ProjectLinks.astro";
+import Pill from "../../components/Pill.astro";
 
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
@@ -17,13 +19,11 @@ const { Content } = await project.render();
 
 <BlogPost {...project.data}>
   <ul class="flex gap-2 mt-4 mb-2">
-    {
-      project.data.technologies?.map((tech: string) => (
-        <li class="bg-black text-white inline-block px-3 py-1 text-xs rounded-full">
-          {tech}
-        </li>
-      ))
-    }
+    {project.data.technologies?.map((tech: string) => <Pill>{tech}</Pill>)}
   </ul>
   <Content />
+  <ProjectLinks
+    repoURL={project.data.repoURL}
+    deployURL={project.data.deployURL}
+  />
 </BlogPost>

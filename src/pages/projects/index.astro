@@ -6,6 +6,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
 import { getCollection } from "astro:content";
 import FormattedDate from "../../components/FormattedDate.astro";
 import Layout from "../../layouts/Layout.astro";
+import Pill from "../../components/Pill.astro";
 
 const projects = (await getCollection("projects")).sort((a, b) =>
   b.data.pubDate.toISOString().localeCompare(a.data.pubDate.toISOString())
@@ -22,7 +23,7 @@ const projectList = projects.filter(
   <head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
   </head>
-  <body>
+  <body class="dark:bg-gray-800 dark:text-slate-50">
     <Header />
     <Layout>
       <section>
@@ -54,9 +55,7 @@ const projectList = projects.filter(
                     <p class="mt-2 text-lg mb-1">{project.data.description}</p>
                     <ul class="flex gap-x-4">
                       {project.data.technologies?.map((tag: string) => (
-                        <li class="text-xs leading-none bg-gray-800 text-white px-3 py-1 rounded-md">
-                          {tag}
-                        </li>
+                        <Pill>{tag}</Pill>
                       ))}
                     </ul>
                   </div>
