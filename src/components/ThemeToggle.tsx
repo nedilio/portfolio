@@ -4,7 +4,7 @@ const ThemeToggle = () => {
   const [theme, setTheme] = useState(() => {
     const theme = localStorage.getItem("theme");
     console.log(theme);
-    return theme || "light";
+    return theme || "";
   });
 
   const handleClick = () => {
@@ -19,8 +19,15 @@ const ThemeToggle = () => {
     }
     localStorage.setItem("theme", theme);
   }, [theme]);
+
   return (
-    <button onClick={handleClick}>{theme === "light" ? "🌙" : "🌞"}</button>
+    <button
+      className="w-6 h-6 z-10 absolute"
+      aria-label="theme toggle"
+      onClick={handleClick}
+    >
+      {theme === "light" ? "🌙" : "🌞"}
+    </button>
   );
 };
 
