@@ -60,3 +60,21 @@ blockquote {
   margin: 0px;
   font-style: italic;
 }
+
+.content {
+  & ul {
+    @apply mt-2;
+  }
+  & li {
+    list-style: circle;
+    @apply text-sm;
+    @apply mt-1;
+  }
+  & a {
+    color: #871dea;
+    text-decoration: underline;
+    &::hover {
+      text-decoration: none;
+    }
+  }
+}

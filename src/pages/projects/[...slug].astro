@@ -21,7 +21,9 @@ const { Content } = await project.render();
   <ul class="flex gap-2 mt-4 mb-2">
     {project.data.technologies?.map((tech: string) => <Pill>{tech}</Pill>)}
   </ul>
-  <Content />
+  <div class="content">
+    <Content />
+  </div>
   <ProjectLinks
     repoURL={project.data.repoURL}
     deployURL={project.data.deployURL}
