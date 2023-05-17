@@ -7,6 +7,7 @@ import { getCollection } from "astro:content";
 import FormattedDate from "../../components/FormattedDate.astro";
 import Layout from "../../layouts/Layout.astro";
 import Pill from "../../components/Pill.astro";
+import ProjectLinks from "../../components/ProjectLinks.astro";
 
 const projects = (await getCollection("projects")).sort((a, b) =>
   b.data.pubDate.toISOString().localeCompare(a.data.pubDate.toISOString())
@@ -58,6 +59,10 @@ const projectList = projects.filter(
                         <Pill>{tag}</Pill>
                       ))}
                     </ul>
+                    <ProjectLinks
+                      repoURL={project.data.repoURL}
+                      deployURL={project.data.deployURL}
+                    />
                   </div>
                 </div>
               </li>

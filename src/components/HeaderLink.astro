@@ -2,7 +2,6 @@
 import type { HTMLAttributes } from "astro/types";
 
 type Props = HTMLAttributes<"a">;
-console.log(Astro.props);
 const { href, class: className, ...props } = Astro.props;
 
 const { pathname } = Astro.url;

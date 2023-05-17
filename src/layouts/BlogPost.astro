@@ -8,7 +8,8 @@ import ThemeLayout from "./ThemeLayout.astro";
 
 type Props = CollectionEntry<"projects">["data"];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, deployURL } =
+  Astro.props;
 ---
 
 <html lang="en">
@@ -38,13 +39,15 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         <FormattedDate date={pubDate} />
         {
           heroImage && (
-            <img
-              width={720}
-              height={360}
-              src={heroImage}
-              alt={title}
-              class="mx-auto mt-4 mb-8 rounded-3xl w-full"
-            />
+            <a href={deployURL} target="_blank">
+              <img
+                width={720}
+                height={360}
+                src={heroImage}
+                alt={title}
+                class="mx-auto mt-4 mb-8 rounded-3xl w-full"
+              />
+            </a>
           )
         }
         {
