@@ -11,6 +11,6 @@ deployURL: "https://avatar-generator-cloudinary.vercel.app/"
 ---
 
 This app was created to participate in [Midudev's](https://www.twitch.tv/midudev) Cloudinary Hackaton.
-[Cloudinary](https://cloudinary.com/) is an image and video processing library and uses AI, this app upload a photo and search for faces to generate an avatar that canbbe downloaded. You don't want to upload a photo without a fece on it.
+[Cloudinary](https://cloudinary.com/) is an image and video processing library and uses AI, this app upload a photo and search for faces to generate an avatar that can be downloaded. You don't want to upload a photo without a face on it 🤣.
 
 Developed in React and uses a Dropzone to upload the file.
