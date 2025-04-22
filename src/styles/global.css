@@ -71,7 +71,7 @@ blockquote {
     @apply mt-1;
   }
   & a {
-    color: #871dea;
+    color: #a78bfa;
     text-decoration: underline;
     &::hover {
       text-decoration: none;
