@@ -2,7 +2,7 @@
 title: "Reset Coffee"
 description: "Fidelity coffee card ☕"
 pubDate: "2024-05-10 00:00:00"
-heroImage: "/projects/reset-coffee.jpg"
+heroImage: "/projects/reset-coffee.png"
 deployURL: "https://reset-coffee.vercel.app"
 repoURL: "https://github.com/nedilio/reset-coffee"
 technologies:
