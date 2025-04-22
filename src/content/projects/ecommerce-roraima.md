@@ -2,7 +2,7 @@
 title: "Roraima Bike"
 description: "Ecommerce for a bike store"
 pubDate: "2022-06-15 00:00:00"
-heroImage: "/projects/ecommerce-roraima.png"
+heroImage: "/projects/ecommerce-roraima.webp"
 technologies:
   - "React"
   - "Firebase"

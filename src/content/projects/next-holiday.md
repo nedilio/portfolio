@@ -2,7 +2,7 @@
 title: "Next Holiday"
 description: "When is the next holiday? 🎉"
 pubDate: "2023-05-10 00:00:00"
-heroImage: "/projects/next-holiday.png"
+heroImage: "/projects/next-holiday.webp"
 deployURL: "https://next-holiday.vercel.app/"
 repoURL: "https://github.com/nedilio/next-holiday"
 technologies:

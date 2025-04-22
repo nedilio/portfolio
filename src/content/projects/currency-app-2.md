@@ -2,7 +2,7 @@
 title: "Currency App 2"
 description: "Another currency app"
 pubDate: "2023-05-11 00:00:00"
-heroImage: "/projects/currency-app-2.png"
+heroImage: "/projects/currency-app-2.webp"
 technologies:
   - "React"
   - "Next.js"

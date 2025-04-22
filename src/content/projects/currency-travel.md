@@ -2,7 +2,7 @@
 title: "Currency Travel"
 description: "Currency App"
 pubDate: "2022-09-26 00:00:00"
-heroImage: "/projects/currency-travel.jpg"
+heroImage: "/projects/currency-travel.webp"
 technologies:
   - "React"
   - "API"

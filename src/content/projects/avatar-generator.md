@@ -2,7 +2,7 @@
 title: "Avatar Generator"
 description: "Cloudinary based avatar generator"
 pubDate: "2023-03-04 00:00:00"
-heroImage: "/projects/avatar-generator.png"
+heroImage: "/projects/avatar-generator.webp"
 technologies:
   - "React"
   - "Cloudinary"
