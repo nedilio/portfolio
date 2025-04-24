@@ -38,7 +38,7 @@ const projectList = projects.filter(
                     class="block w-full lg:w-1/2 hover:scale-105 transition-transform mb-4"
                   >
                     <img
-                      transition:animate="slide"
+                      transition:name={`project image ${project.data.title}`}
                       src={project.data.heroImage}
                       alt={project.data.title}
                       class="rounded-2xl aspect-video object-cover w-full border-2 border-violet-500"
