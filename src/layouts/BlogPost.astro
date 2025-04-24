@@ -43,15 +43,21 @@ const { title, description, pubDate, updatedDate, heroImage, deployURL } =
         <FormattedDate date={pubDate} />
         {
           heroImage && (
-            <a href={deployURL} target="_blank">
-              <img
-                width={720}
-                height={360}
-                src={heroImage}
-                alt={title}
+            <div class="flex justify-center">
+              <a
+                href={deployURL}
                 class="mx-auto mt-4 mb-8 rounded-3xl max-h-72 w-auto"
-              />
-            </a>
+                target="_blank"
+              >
+                <img
+                  aspect-ratio="16/9"
+                  height="288"
+                  src={heroImage}
+                  alt={title}
+                  class="mx-auto mt-4 mb-8 rounded-3xl max-h-72 w-auto"
+                />
+              </a>
+            </div>
           )
         }
         {
