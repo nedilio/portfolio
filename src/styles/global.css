@@ -5,12 +5,13 @@
  */
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+@plugin '@tailwindcss/typography';
 
 body {
   font-family: Verdana, sans-serif;
 }
 
-.content {
+/* .content {
   & ul {
     margin-top: calc(var(--tw-space) * 2);
   }
@@ -26,4 +27,4 @@ body {
       text-decoration: none;
     }
   }
-}
+} */

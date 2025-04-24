@@ -22,7 +22,9 @@ const { Content } = await project.render();
   <ul class="flex gap-2 mt-4 mb-2">
     {project.data.technologies?.map((tech: string) => <Pill>{tech}</Pill>)}
   </ul>
-  <div class="content">
+  <div
+    class="content prose dark:prose-invert max-w-none prose-a:text-violet-600 dark:prose-a:text-violet-400 prose-a:hover:no-underline prose-a:underline-offset-2"
+  >
     <Content />
   </div>
   <ProjectLinks
