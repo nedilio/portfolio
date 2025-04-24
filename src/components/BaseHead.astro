@@ -1,6 +1,7 @@
 ---
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
+import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 
 export interface Props {
@@ -15,6 +16,7 @@ const { title, description, image = "/social-nelson.jpg" } = Astro.props;
 ---
 
 <!-- Global Metadata -->
+<ClientRouter />
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -41,3 +43,4 @@ const { title, description, image = "/social-nelson.jpg" } = Astro.props;
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image, Astro.url)} />
+<!-- <ClientRouter /> -->
