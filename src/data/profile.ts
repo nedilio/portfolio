@@ -26,7 +26,12 @@ export const profile = {
     github: 'https://github.com/nedilio',
     linkedin: 'https://www.linkedin.com/in/nelson-izquierdo-izquierdo/',
   },
-  cv: null as string | null, // TODO: optional path to a CV PDF in /public
+  /** Public CVs (no phone). Rebuild with cv/build.sh */
+  cv: {
+    es: '/cv/Nelson-Izquierdo-CV-es.pdf',
+    en: '/cv/Nelson-Izquierdo-CV-en.pdf',
+  } satisfies Localized,
+  available: true,
 };
 
 export const stack = {

@@ -3,6 +3,8 @@ import '@/styles/global.css';
 import { languages, type Lang } from '@/i18n/ui';
 import { localePath, useTranslations } from '@/i18n/utils';
 import { profile } from '@/data/profile';
+import Analytics from '@vercel/analytics/astro';
+import SpeedInsights from '@vercel/speed-insights/astro';
 
 interface Props {
   lang: Lang;
@@ -13,6 +15,7 @@ const t = useTranslations(lang);
 const title = `${profile.name} — ${t('meta.title')}`;
 const description = t('meta.description');
 const canonical = new URL(localePath(lang), Astro.site);
+const ogImage = new URL(`/og-${lang}.png`, Astro.site);
 ---
 
 <!doctype html>
@@ -34,8 +37,18 @@ const canonical = new URL(localePath(lang), Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_US'} />
+    <meta property="og:site_name" content={profile.name} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={t('meta.ogAlt')} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="generator" content={Astro.generator} />
     <meta name="theme-color" content="#f6f8ee" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#121611" media="(prefers-color-scheme: dark)" />
@@ -57,5 +70,7 @@ const canonical = new URL(localePath(lang), Astro.site);
       <div class="absolute -bottom-40 left-1/4 size-[28rem] rounded-full blur-3xl" style="background: var(--blob-3)"></div>
     </div>
     <slot />
+    <Analytics />
+    <SpeedInsights />
   </body>
 </html>

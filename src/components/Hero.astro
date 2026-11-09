@@ -1,5 +1,5 @@
 ---
-import { ArrowDown, ArrowRight, Code2, Layers, Server, Sparkles } from 'lucide-react';
+import { ArrowDown, ArrowRight, Code2, Download, Layers, Server, Sparkles } from 'lucide-react';
 import type { Lang } from '@/i18n/ui';
 import { l, useTranslations } from '@/i18n/utils';
 import { profile } from '@/data/profile';
@@ -24,6 +24,17 @@ const cards = [
 
     <div class="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-end">
       <div>
+        {
+          profile.available && (
+            <p class="pill mb-6">
+              <span class="relative flex size-2">
+                <span class="bg-lime absolute inline-flex size-full animate-ping rounded-full opacity-75" />
+                <span class="bg-lime relative inline-flex size-2 rounded-full" />
+              </span>
+              {t('hero.available')}
+            </p>
+          )
+        }
         <p class="text-muted-foreground mb-4 text-lg">{t('hero.hello')} {profile.name}…</p>
         <h1 class="text-4xl leading-[1.05] font-semibold tracking-tight text-balance sm:text-5xl lg:text-6xl">
           {t('hero.title.a')}<br />
@@ -35,17 +46,11 @@ const cards = [
 
       <div class="flex flex-col gap-6 lg:items-end lg:text-right">
         <p class="text-muted-foreground max-w-md leading-relaxed">
-          <span class="text-foreground inline-flex items-center gap-2 font-medium">
-            <span class="relative flex size-2">
-              <span class="bg-lime absolute inline-flex size-full animate-ping rounded-full opacity-75"></span>
-              <span class="bg-lime relative inline-flex size-2 rounded-full"></span>
-            </span>
-            <em>{l(profile.role, lang)}</em>
-          </span>
+          <span class="text-foreground font-medium"><em>{l(profile.role, lang)}</em></span>
           <br />
           {l(profile.heroDescription, lang)}
         </p>
-        <div class="flex flex-wrap gap-3">
+        <div class="flex flex-wrap gap-3 lg:justify-end">
           <a
             href="#contact"
             class="bg-lime text-lime-foreground inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold shadow-[0_8px_30px_-8px_var(--lime)] transition hover:-translate-y-0.5"
@@ -57,6 +62,14 @@ const cards = [
             class="glass inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition hover:-translate-y-0.5"
           >
             {t('hero.cta2')}
+          </a>
+          <a
+            href={l(profile.cv, lang)}
+            download
+            class="glass inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition hover:-translate-y-0.5"
+          >
+            <Download className="size-4" />
+            {t('cv.download')}
           </a>
         </div>
       </div>

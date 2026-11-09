@@ -1,15 +1,16 @@
 ---
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Download } from 'lucide-react';
 import SectionLabel from './SectionLabel.astro';
 import Icon from './Icon.astro';
 import type { Lang } from '@/i18n/ui';
-import { useTranslations } from '@/i18n/utils';
+import { l, useTranslations } from '@/i18n/utils';
 import { profile } from '@/data/profile';
 
 interface Props {
   lang: Lang;
 }
-const t = useTranslations(Astro.props.lang);
+const { lang } = Astro.props;
+const t = useTranslations(lang);
 ---
 
 <section id="contact" class="mx-auto max-w-6xl px-4 py-16 sm:py-24">
@@ -31,6 +32,14 @@ const t = useTranslations(Astro.props.lang);
         class="bg-lime text-lime-foreground inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold shadow-[0_8px_30px_-8px_var(--lime)] transition hover:-translate-y-0.5"
       >
         {t('contact.cta')} <ArrowRight className="size-4" />
+      </a>
+      <a
+        href={l(profile.cv, lang)}
+        download
+        class="glass inline-flex items-center gap-2 rounded-full px-5 py-3.5 text-sm font-semibold"
+      >
+        <Download className="size-4" />
+        {t('cv.download')}
       </a>
       <a
         href={profile.socials.linkedin}

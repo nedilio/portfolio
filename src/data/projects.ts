@@ -1,4 +1,9 @@
+import type { ImageMetadata } from 'astro';
 import type { Localized } from '@/i18n/ui';
+import resetCoffeeImg from '@/assets/projects/reset-coffee.jpg';
+import all4bikersImg from '@/assets/projects/club-all4bikers.jpg';
+import cokeLoggerImg from '@/assets/projects/coke-logger.jpg';
+import beneficiosImg from '@/assets/projects/beneficios-restaurantes.jpg';
 
 export type Tint = 'lime' | 'lavender' | 'pink' | 'amber';
 
@@ -9,8 +14,8 @@ export interface Project {
   summary: Localized;
   tags: string[];
   stack: string[];
-  /** Path under /public, e.g. "/projects/reset-coffee.webp". Falls back to a gradient mock. */
-  image?: string;
+  /** Screenshot in src/assets/projects (optimized by astro:assets). Falls back to a mock. */
+  image?: ImageMetadata;
   repo?: string;
   live?: string;
   /** "YYYY-MM" */
@@ -24,7 +29,7 @@ export interface Project {
 export const projects: Project[] = [
   {
     slug: 'reset-coffee',
-    image: '/projects/reset-coffee.jpg',
+    image: resetCoffeeImg,
     title: 'Reset Coffee',
     subtitle: { es: 'The RESeT Club · tarjeta de fidelidad digital', en: 'The RESeT Club · digital loyalty card' },
     summary: {
@@ -48,7 +53,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'club-all4bikers',
-    image: '/projects/club-all4bikers.jpg',
+    image: all4bikersImg,
     title: 'Club All4Bikers',
     subtitle: { es: 'Club de socios para motociclistas', en: 'Members club for motorcyclists' },
     summary: {
@@ -65,7 +70,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'coke-logger',
-    image: '/projects/coke-logger.jpg',
+    image: cokeLoggerImg,
     title: 'Coke Logger',
     subtitle: { es: 'Registro de consumo', en: 'Consumption tracker' },
     summary: {
@@ -82,7 +87,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'beneficios-restaurantes',
-    image: '/projects/beneficios-restaurantes.jpg',
+    image: beneficiosImg,
     title: 'Beneficios Restaurantes',
     subtitle: { es: 'Descuentos bancarios', en: 'Bank dining perks' },
     summary: {

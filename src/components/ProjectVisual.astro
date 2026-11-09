@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import type { Project } from '@/data/projects';
 
 interface Props {
@@ -35,13 +36,14 @@ const host = project.live ? new URL(project.live).host : project.slug;
     </div>
     {
       project.image ? (
-        <img
+        <Image
           src={project.image}
           alt={`${project.title} screenshot`}
-          width="1280"
-          height="800"
+          widths={[480, 800, 1280]}
+          sizes="(min-width: 1024px) 560px, 90vw"
+          format="webp"
+          quality={80}
           loading="lazy"
-          decoding="async"
           class="aspect-[16/10] w-full object-cover object-top"
         />
       ) : (
