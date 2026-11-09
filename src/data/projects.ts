@@ -3,7 +3,9 @@ import type { Localized } from '@/i18n/ui';
 import resetCoffeeImg from '@/assets/projects/reset-coffee.jpg';
 import all4bikersImg from '@/assets/projects/club-all4bikers.jpg';
 import all4bikersPassImg from '@/assets/projects/club-all4bikers-pass.png';
-import cokeLoggerImg from '@/assets/projects/coke-logger.jpg';
+import cokeLoggerLandingImg from '@/assets/projects/coke-logger-landing.png';
+import cokeLoggerDashboardImg from '@/assets/projects/coke-logger-dashboard.png';
+import cokeLoggerMenuImg from '@/assets/projects/coke-logger-menu.png';
 import beneficiosImg from '@/assets/projects/beneficios-restaurantes.jpg';
 
 export type Tint = 'lime' | 'lavender' | 'pink' | 'amber';
@@ -19,6 +21,8 @@ export interface Project {
   image?: ImageMetadata;
   /** Portrait mobile screenshot; shown instead of the browser window when present. */
   phoneImage?: ImageMetadata;
+  /** Several portrait mobile screenshots shown as a fan of phones (replaces the browser window). Middle one goes in front. */
+  phones?: ImageMetadata[];
   repo?: string;
   live?: string;
   /** "YYYY-MM" */
@@ -74,16 +78,16 @@ export const projects: Project[] = [
   },
   {
     slug: 'coke-logger',
-    image: cokeLoggerImg,
+    phones: [cokeLoggerLandingImg, cokeLoggerDashboardImg, cokeLoggerMenuImg],
     title: 'Coke Logger',
     subtitle: { es: 'Registro de consumo', en: 'Consumption tracker' },
     summary: {
-      es: 'App full-stack para registrar y visualizar el consumo de Coca-Cola: autenticación, dashboard, registros por tipo, formato y tamaño, y modo oscuro.',
-      en: 'Full-stack app to log and visualize Coca-Cola consumption: authentication, a dashboard, entries by type, format and size, and dark mode.',
+      es: 'App para registrar cada lata, botella o vaso de Coca-Cola y ver tu consumo de un vistazo: dashboard con el avance de la semana y el mes, tu variedad y tamaño favoritos, y un ranking entre usuarios. Incluye cuentas con foto de perfil y una API para la app de iPhone que viene en camino.',
+      en: 'An app to log every can, bottle or glass of Coca-Cola and see your consumption at a glance: a dashboard with weekly and monthly progress, your favorite variety and size, and a leaderboard across users. Includes accounts with profile photos and an API for the upcoming iPhone app.',
     },
-    tags: ['Full-stack', 'Dashboard'],
-    stack: ['Next.js 16', 'Better Auth', 'Neon', 'Drizzle ORM', 'shadcn/ui'],
-    live: 'https://coke-logger.vercel.app',
+    tags: ['Full-stack', 'Mobile-first'],
+    stack: ['Next.js 16', 'Better Auth', 'Neon', 'Drizzle ORM', 'UploadThing', 'shadcn/ui'],
+    live: 'https://cokelogger.nedilio.dev',
     repo: 'https://github.com/nedilio/coke-logger',
     start: '2026-02',
     end: null,
