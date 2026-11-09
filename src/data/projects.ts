@@ -33,8 +33,8 @@ export const projects: Project[] = [
     title: 'Reset Coffee',
     subtitle: { es: 'The RESeT Club · tarjeta de fidelidad digital', en: 'The RESeT Club · digital loyalty card' },
     summary: {
-      es: 'Programa de fidelización para Reset Coffee, una cafetería en Providencia, Santiago. Los clientes inician sesión con Google y llevan su tarjeta digital: por cada 9 cafés, uno gratis. El equipo del local registra compras escaneando un QR desde un panel de administración.',
-      en: 'Loyalty program for Reset Coffee, a coffee shop in Providencia, Santiago. Customers sign in with Google and carry a digital card: buy 9 coffees, get one free. Staff log purchases by scanning a QR code from an admin dashboard.',
+      es: 'Programa de fidelización para Reset Coffee, una cafetería en Providencia, Santiago. Los clientes se unen escaneando un QR en el mostrador, inician sesión con Google y llevan su tarjeta digital: por cada 9 cafés, uno gratis. El equipo del local suma cada compra desde un panel de administración.',
+      en: 'Loyalty program for Reset Coffee, a coffee shop in Providencia, Santiago. Customers join by scanning a QR code at the counter, sign in with Google and carry a digital card: buy 9 coffees, get one free. Staff add each purchase from an admin dashboard.',
     },
     tags: ['Full-stack', 'Auth', 'QR'],
     stack: ['Next.js', 'TypeScript', 'Supabase', 'NextAuth', 'Tailwind CSS', 'PostHog'],
@@ -46,7 +46,7 @@ export const projects: Project[] = [
     tint: 'lime',
     highlights: [
       { es: 'Tarjeta digital con login de Google', en: 'Digital card with Google sign-in' },
-      { es: 'Registro de compras por código QR', en: 'Purchases logged via QR code' },
+      { es: 'Alta al club con un QR en el mostrador', en: 'Join the club via a QR code at the counter' },
       { es: 'Panel de admin con búsqueda y paginación de clientes', en: 'Admin dashboard with customer search & pagination' },
       { es: 'Analítica de producto con PostHog', en: 'Product analytics with PostHog' },
     ],

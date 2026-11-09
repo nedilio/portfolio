@@ -8,13 +8,18 @@ import SpeedInsights from '@vercel/speed-insights/astro';
 
 interface Props {
   lang: Lang;
+  /** Path of this page in each language (defaults to the home page). */
+  paths?: Record<Lang, string>;
+  title?: string;
+  description?: string;
 }
 
 const { lang } = Astro.props;
 const t = useTranslations(lang);
-const title = `${profile.name} — ${t('meta.title')}`;
-const description = t('meta.description');
-const canonical = new URL(localePath(lang), Astro.site);
+const paths: Record<Lang, string> = Astro.props.paths ?? { es: localePath('es'), en: localePath('en') };
+const title = Astro.props.title ?? `${profile.name} — ${t('meta.title')}`;
+const description = Astro.props.description ?? t('meta.description');
+const canonical = new URL(paths[lang], Astro.site);
 const ogImage = new URL(`/og-${lang}.png`, Astro.site);
 ---
 
@@ -28,10 +33,10 @@ const ogImage = new URL(`/og-${lang}.png`, Astro.site);
     <link rel="canonical" href={canonical} />
     {
       (Object.keys(languages) as Lang[]).map((code) => (
-        <link rel="alternate" hreflang={code} href={new URL(localePath(code), Astro.site)} />
+        <link rel="alternate" hreflang={code} href={new URL(paths[code], Astro.site)} />
       ))
     }
-    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL(paths.es, Astro.site)} />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />

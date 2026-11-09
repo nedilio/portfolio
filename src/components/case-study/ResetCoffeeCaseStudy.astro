@@ -1,0 +1,380 @@
+---
+import { Code } from 'astro:components';
+import { ArrowLeft, ArrowRight, ArrowUpRight, BarChart3, KeyRound, Lock, RefreshCcw, Search, ShieldCheck } from 'lucide-react';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Navbar from '@/components/Navbar.astro';
+import Footer from '@/components/Footer.astro';
+import SectionLabel from '@/components/SectionLabel.astro';
+import Icon from '@/components/Icon.astro';
+import PhoneFrame from './PhoneFrame.astro';
+import CardMock from './CardMock.astro';
+import AdminMock from './AdminMock.astro';
+import type { Lang } from '@/i18n/ui';
+import { localePath } from '@/i18n/utils';
+import { caseStudyPaths } from '@/data/case-studies';
+import loginImg from '@/assets/projects/reset-coffee-login.png';
+import qrImg from '@/assets/projects/reset-coffee-resetqr.png';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const es = lang === 'es';
+const tx = (s: string, e: string) => (es ? s : e);
+const paths = caseStudyPaths['reset-coffee'];
+const home = localePath(lang);
+
+const meta = [
+  { k: tx('Rol', 'Role'), v: tx('Diseño y desarrollo full-stack', 'Full-stack design & development') },
+  { k: tx('Cliente', 'Client'), v: 'Reset Coffee · Providencia' },
+  { k: tx('Período', 'Timeline'), v: tx('Ago 2024 – actualidad', 'Aug 2024 – present') },
+  { k: 'Stack', v: 'Next.js · TypeScript · Supabase · NextAuth · PostHog' },
+];
+
+const flow = [
+  {
+    n: '01',
+    title: tx('Escanea el QR', 'Scan the QR'),
+    text: tx('Un QR en la tablet del mostrador lleva al cliente directo al club.', 'A QR code on the counter tablet takes customers straight to the club.'),
+  },
+  {
+    n: '02',
+    title: tx('Login con Google', 'Sign in with Google'),
+    text: tx('Un toque y queda registrado. Sin contraseñas ni formularios.', 'One tap and they are in. No passwords, no forms.'),
+  },
+  {
+    n: '03',
+    title: tx('Suma en cada visita', 'Collect on every visit'),
+    text: tx('El barista busca al cliente en el panel y suma su café.', 'The barista finds the customer in the dashboard and adds their coffee.'),
+  },
+  {
+    n: '04',
+    title: tx('Canjea el premio', 'Redeem the reward'),
+    text: tx('Al llegar a 9, la tarjeta celebra con confetti y el barista canjea el café gratis.', 'At 9 the card celebrates with confetti, and the barista redeems the free coffee.'),
+  },
+];
+
+const casCode = `// ${tx('Nunca confiar en el conteo que envía el navegador:', "Never trust the count sent by the browser:")}
+// ${tx('se lee el valor actual desde la base de datos.', 'read the current value from the database.')}
+const { data: client } = await supabase
+  .from(TABLE_NAME).select("email, coffees").eq("id", id).maybeSingle();
+
+if (client.coffees >= COFFEES_TO_EXCHANGE) {
+  return { error: "Client already has a free coffee." };
+}
+
+// Compare-and-set: ${tx('solo actualiza si nadie cambió el conteo entretanto.', 'only updates if nobody changed the count meanwhile.')}
+const { data: updated } = await supabase
+  .from(TABLE_NAME)
+  .update({ coffees: client.coffees + 1 })
+  .eq("id", id)
+  .eq("coffees", client.coffees)
+  .select("id");`;
+
+const guardCode = `// ${tx('Las Server Actions son endpoints POST públicos:', 'Server Actions are public POST endpoints:')}
+// ${tx('cada acción de admin debe verificar el rol por sí misma.', 'every admin action must check the role itself.')}
+export const isAdmin = async () => {
+  const session = await auth();
+  return session?.user?.role === "admin";
+};
+
+export const addCoffee = async (formData: FormData) => {
+  if (!(await isAdmin())) return UNAUTHORIZED;
+  // ...
+};`;
+
+const decisions = [
+  {
+    icon: RefreshCcw,
+    title: tx('Conteo atómico, sin condiciones de carrera', 'Atomic counting, no race conditions'),
+    text: tx(
+      'En hora punta, dos personas del staff pueden sumar el café del mismo cliente casi al mismo tiempo. La actualización usa compare-and-set: solo se aplica si el conteo no cambió desde que se leyó, y el servidor nunca confía en el número que envía el navegador.',
+      'At rush hour, two staff members can add a coffee for the same customer at almost the same time. The update uses compare-and-set: it only applies if the count has not changed since it was read, and the server never trusts the number sent by the browser.',
+    ),
+    code: casCode,
+  },
+  {
+    icon: ShieldCheck,
+    title: tx('Server Actions tratadas como endpoints públicos', 'Server Actions treated as public endpoints'),
+    text: tx(
+      'Ocultar un botón no protege nada: cualquiera puede invocar una Server Action con un POST. Por eso cada acción de administración (sumar, canjear, eliminar) verifica el rol en el servidor antes de tocar la base de datos.',
+      'Hiding a button protects nothing: anyone can invoke a Server Action with a POST. So every admin action (add, redeem, delete) checks the role on the server before touching the database.',
+    ),
+    code: guardCode,
+  },
+];
+
+const smaller = [
+  {
+    icon: KeyRound,
+    title: tx('Roles sin tabla de permisos', 'Roles without a permissions table'),
+    text: tx(
+      'Los administradores se definen con una variable de entorno por ambiente. Si falta, la lista queda vacía y nadie es admin: falla de forma segura.',
+      'Admins are defined with a per-environment variable. If it is missing, the list is empty and nobody is admin: it fails closed.',
+    ),
+  },
+  {
+    icon: Lock,
+    title: tx('Sesión liviana, alta idempotente', 'Lightweight session, idempotent sign-up'),
+    text: tx(
+      'El callback de sesión, que corre en cada request, no consulta la base de datos. El alta ocurre una vez por login con un upsert por email que nunca sobrescribe los cafés acumulados, y la tarjeta se auto-repara si la fila no existe.',
+      'The session callback, which runs on every request, never queries the database. Sign-up happens once per login through an upsert by email that never overwrites collected coffees, and the card page self-heals if the row is missing.',
+    ),
+  },
+  {
+    icon: BarChart3,
+    title: tx('Analítica de producto desde el servidor', 'Server-side product analytics'),
+    text: tx(
+      'Eventos de PostHog en el servidor para todo el embudo: registro, login, café sumado, premio ganado y premio canjeado. Distingue un canje real de una corrección manual.',
+      'Server-side PostHog events cover the whole funnel: sign-up, login, coffee added, reward earned and reward redeemed. It tells a real redemption apart from a manual correction.',
+    ),
+  },
+  {
+    icon: Search,
+    title: tx('Un panel pensado para el mostrador', 'A dashboard built for the counter'),
+    text: tx(
+      'Búsqueda por nombre que ignora tildes, paginación de 10 clientes y streaming con Suspense y skeletons, para encontrar a alguien en segundos con la fila esperando.',
+      'Accent-insensitive name search, pagination of 10 customers and streaming with Suspense and skeletons, so staff can find someone in seconds with a queue waiting.',
+    ),
+  },
+];
+
+const stack = [
+  { layer: tx('Frontend', 'Frontend'), items: 'Next.js App Router · React · TypeScript · Tailwind CSS · Radix UI' },
+  { layer: tx('Auth', 'Auth'), items: 'NextAuth (Auth.js) · Google OAuth · middleware' },
+  { layer: tx('Datos', 'Data'), items: 'Supabase (Postgres) · Server Actions' },
+  { layer: tx('Producto', 'Product'), items: 'PostHog · Vercel Analytics · Speed Insights' },
+  { layer: 'Deploy', items: 'Vercel' },
+];
+
+const learnings = [
+  tx(
+    'En una app pequeña, los detalles de concurrencia y permisos importan tanto como en una grande: un conteo duplicado es un café regalado.',
+    'In a small app, concurrency and permission details matter as much as in a big one: a duplicated count is a free coffee given away.',
+  ),
+  tx(
+    'Diseñar para el mostrador cambia las prioridades: menos pasos, búsqueda tolerante y estados de carga claros valen más que cualquier animación.',
+    'Designing for the counter changes priorities: fewer steps, forgiving search and clear loading states matter more than any animation.',
+  ),
+  tx(
+    'Medir desde el servidor da datos confiables desde el primer día, sin depender de bloqueadores de anuncios ni del navegador del cliente.',
+    'Measuring on the server gives reliable data from day one, independent of ad blockers or the customer’s browser.',
+  ),
+];
+---
+
+<BaseLayout
+  lang={lang}
+  paths={paths}
+  title={tx('Reset Coffee — Caso de estudio · Nelson Izquierdo', 'Reset Coffee — Case study · Nelson Izquierdo')}
+  description={tx(
+    'Cómo diseñé y construí The RESeT Club, la tarjeta de fidelidad digital de Reset Coffee, con Next.js, Supabase y NextAuth.',
+    'How I designed and built The RESeT Club, Reset Coffee’s digital loyalty card, with Next.js, Supabase and NextAuth.',
+  )}
+>
+  <Navbar lang={lang} altHref={paths[es ? 'en' : 'es']} isHome={false} />
+  <main class="mx-auto max-w-6xl px-4 pt-28 sm:pt-32">
+    <a href={`${home}#featured`} class="text-muted-foreground hover:text-foreground mb-8 inline-flex items-center gap-2 text-sm">
+      <ArrowLeft className="size-4" />
+      {tx('Volver al portafolio', 'Back to portfolio')}
+    </a>
+
+    <!-- Header -->
+    <header class="glass bg-tint-lime relative overflow-hidden rounded-[2.5rem] p-6 sm:p-12">
+      <SectionLabel text={tx('Caso de estudio', 'Case study')} />
+      <h1 class="mt-6 text-5xl font-semibold tracking-tight sm:text-7xl">Reset Coffee</h1>
+      <p class="text-muted-foreground mt-3 max-w-2xl text-xl text-balance sm:text-2xl">
+        {tx('The RESeT Club: una tarjeta de fidelidad digital para una cafetería de barrio.', 'The RESeT Club: a digital loyalty card for a neighborhood coffee shop.')}
+      </p>
+      <dl class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          meta.map((m) => (
+            <div class="bg-background/50 rounded-2xl border p-4">
+              <dt class="text-muted-foreground font-mono text-[11px] tracking-wider uppercase">{m.k}</dt>
+              <dd class="mt-1 text-sm font-medium">{m.v}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a
+          href="https://reset-coffee.vercel.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="bg-lime text-lime-foreground inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition hover:-translate-y-0.5"
+        >
+          {tx('Ver app en vivo', 'View live app')} <ArrowUpRight className="size-4" />
+        </a>
+        <a
+          href="https://github.com/nedilio/reset-coffee"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="glass inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition hover:-translate-y-0.5"
+        >
+          <Icon name="github" /> {tx('Código fuente', 'Source code')}
+        </a>
+      </div>
+    </header>
+
+    <!-- Context -->
+    <section class="grid gap-8 py-16 sm:py-24 lg:grid-cols-[1fr_2fr]">
+      <div><SectionLabel text={tx('El problema', 'The problem')} /></div>
+      <div class="space-y-5 text-lg leading-relaxed">
+        <p class="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
+          {tx('Las tarjetas de cartón se pierden, se olvidan y no dicen nada sobre los clientes.', 'Paper stamp cards get lost, get forgotten and say nothing about customers.')}
+        </p>
+        <p class="text-muted-foreground">
+          {
+            tx(
+              'Reset Coffee, una cafetería en Providencia, quería premiar a sus clientes frecuentes con un café gratis cada 9 compras. Necesitaba algo que el cliente no pudiera perder, que el staff pudiera usar en segundos en plena hora punta, y que le diera al negocio una idea real de quién vuelve y cuánto.',
+              'Reset Coffee, a coffee shop in Providencia, Santiago, wanted to reward regulars with a free coffee every 9 purchases. It needed something customers couldn’t lose, that staff could use in seconds at rush hour, and that gave the business a real picture of who comes back and how often.',
+            )
+          }
+        </p>
+      </div>
+    </section>
+
+    <!-- Flow -->
+    <section class="pb-16 sm:pb-24">
+      <div class="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <SectionLabel text={tx('La solución', 'The solution')} />
+        <h2 class="max-w-xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl md:text-right">
+          {tx('Un flujo de cuatro pasos,', 'A four-step flow,')} <span class="text-muted-foreground">{tx('sin apps que instalar.', 'with no app to install.')}</span>
+        </h2>
+      </div>
+      <ol class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          flow.map((f, i) => (
+            <li class:list={['glass relative rounded-[2rem] p-6', ['bg-tint-lime', 'bg-tint-lavender', 'bg-tint-pink', 'bg-tint-amber'][i]]}>
+              <span class="font-mono text-sm text-lime-strong">{f.n}</span>
+              <h3 class="mt-6 text-lg font-semibold">{f.title}</h3>
+              <p class="text-muted-foreground mt-2 text-sm leading-relaxed">{f.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <!-- Screens -->
+    <section class="glass rounded-[2.5rem] px-4 py-12 sm:px-10">
+      <div class="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4">
+        <PhoneFrame src={qrImg} alt={tx('Pantalla del QR para unirse', 'QR screen to join')} caption={tx('QR en el mostrador', 'QR at the counter')} />
+        <PhoneFrame src={loginImg} alt={tx('Pantalla de login con Google', 'Google sign-in screen')} caption={tx('Login con Google', 'Google sign-in')} />
+        <PhoneFrame alt="" caption={tx('Tarjeta en progreso*', 'Card in progress*')}>
+          <CardMock name="Camila Rojas" coffees={6} />
+        </PhoneFrame>
+        <PhoneFrame alt="" caption={tx('Premio desbloqueado*', 'Reward unlocked*')}>
+          <CardMock name="Camila Rojas" coffees={9} />
+        </PhoneFrame>
+      </div>
+      <div class="mx-auto mt-12 max-w-2xl">
+        <AdminMock lang={lang} />
+        <p class="text-muted-foreground mt-3 text-center text-xs">
+          {tx('Panel de administración*', 'Admin dashboard*')}
+        </p>
+      </div>
+      <p class="text-muted-foreground mt-8 text-center text-xs">
+        {
+          tx(
+            '* Ilustraciones recreadas a partir del código de la app (la tarjeta y el panel requieren login). Los nombres son ficticios.',
+            '* Illustrations recreated from the app’s source code (the card and the dashboard require sign-in). Names are fictitious.',
+          )
+        }
+      </p>
+    </section>
+
+    <!-- Decisions -->
+    <section class="py-16 sm:py-24">
+      <div class="mb-12 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <SectionLabel text={tx('Decisiones técnicas', 'Technical decisions')} />
+        <h2 class="max-w-xl text-3xl font-semibold tracking-tight text-balance sm:text-4xl md:text-right">
+          {tx('Pequeña por fuera,', 'Small on the outside,')} <span class="text-muted-foreground">{tx('cuidadosa por dentro.', 'careful on the inside.')}</span>
+        </h2>
+      </div>
+
+      <div class="flex flex-col gap-5">
+        {
+          decisions.map((d) => (
+            <article class="glass grid gap-6 rounded-[2rem] p-6 sm:p-8 lg:grid-cols-[1fr_1.3fr]">
+              <div>
+                <span class="bg-lime text-lime-foreground inline-flex size-11 items-center justify-center rounded-2xl">
+                  <d.icon className="size-5" />
+                </span>
+                <h3 class="mt-5 text-2xl font-semibold tracking-tight">{d.title}</h3>
+                <p class="text-muted-foreground mt-3 leading-relaxed">{d.text}</p>
+              </div>
+              <div class="min-w-0 overflow-hidden rounded-2xl border border-white/10 text-[13px] [&_pre]:overflow-x-auto [&_pre]:p-5">
+                <Code code={d.code} lang="ts" theme="github-dark-dimmed" />
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="mt-5 grid gap-5 sm:grid-cols-2">
+        {
+          smaller.map((d) => (
+            <article class="glass rounded-[2rem] p-6 sm:p-8">
+              <span class="bg-background/70 inline-flex size-11 items-center justify-center rounded-2xl border">
+                <d.icon className="size-5" />
+              </span>
+              <h3 class="mt-5 text-lg font-semibold">{d.title}</h3>
+              <p class="text-muted-foreground mt-2 text-sm leading-relaxed">{d.text}</p>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- Stack -->
+    <section class="grid gap-8 pb-16 sm:pb-24 lg:grid-cols-[1fr_2fr]">
+      <div><SectionLabel text="Stack" /></div>
+      <dl class="glass divide-border divide-y rounded-[2rem] px-6 sm:px-8">
+        {
+          stack.map((s) => (
+            <div class="grid gap-1 py-4 sm:grid-cols-[8rem_1fr]">
+              <dt class="text-muted-foreground font-mono text-xs tracking-wider uppercase sm:pt-0.5">{s.layer}</dt>
+              <dd class="font-medium">{s.items}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <!-- Learnings -->
+    <section class="grid gap-8 pb-16 sm:pb-24 lg:grid-cols-[1fr_2fr]">
+      <div><SectionLabel text={tx('Aprendizajes', 'Learnings')} /></div>
+      <ol class="space-y-6">
+        {
+          learnings.map((item, i) => (
+            <li class="flex gap-5">
+              <span class="text-lime-strong font-mono text-sm">0{i + 1}</span>
+              <p class="text-lg leading-relaxed">{item}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <!-- CTA -->
+    <section class="pb-16 sm:pb-24">
+      <div class="glass relative overflow-hidden rounded-[2.5rem] px-6 py-14 text-center sm:px-12">
+        <h2 class="mx-auto max-w-2xl text-3xl font-semibold tracking-tight text-balance sm:text-5xl">
+          {tx('¿Necesitas algo así para tu negocio?', 'Need something like this for your business?')}
+        </h2>
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <a
+            href={`${home}#contact`}
+            class="bg-lime text-lime-foreground inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold"
+          >
+            {tx('Hablemos', "Let's talk")} <ArrowRight className="size-4" />
+          </a>
+          <a href={`${home}#projects`} class="glass inline-flex items-center gap-2 rounded-full px-5 py-3.5 text-sm font-semibold">
+            {tx('Ver más proyectos', 'See more projects')}
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer lang={lang} />
+</BaseLayout>

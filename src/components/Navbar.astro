@@ -8,17 +8,23 @@ import { profile } from '@/data/profile';
 
 interface Props {
   lang: Lang;
+  /** URL of this same page in the other language (defaults to the other home page). */
+  altHref?: string;
+  /** False on inner pages, so section links point back to the home page. */
+  isHome?: boolean;
 }
-const { lang } = Astro.props;
+const { lang, isHome = true } = Astro.props;
 const t = useTranslations(lang);
 const otherLang: Lang = lang === 'es' ? 'en' : 'es';
+const altHref = Astro.props.altHref ?? localePath(otherLang);
+const base = isHome ? '' : localePath(lang);
 
 const links = [
-  { href: '#about', label: t('nav.about') },
-  { href: '#featured', label: t('nav.featured') },
-  { href: '#projects', label: t('nav.projects') },
-  { href: '#experience', label: t('nav.experience') },
-  { href: '#contact', label: t('nav.contact') },
+  { href: `${base}#about`, label: t('nav.about') },
+  { href: `${base}#featured`, label: t('nav.featured') },
+  { href: `${base}#projects`, label: t('nav.projects') },
+  { href: `${base}#experience`, label: t('nav.experience') },
+  { href: `${base}#contact`, label: t('nav.contact') },
 ];
 ---
 
@@ -66,7 +72,7 @@ const links = [
         <Icon name="linkedin" />
       </a>
       <a
-        href={localePath(otherLang)}
+        href={altHref}
         hreflang={otherLang}
         aria-label={t('lang.switch')}
         title={t('lang.switch')}

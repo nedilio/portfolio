@@ -1,0 +1,30 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src?: ImageMetadata;
+  alt: string;
+  caption: string;
+  class?: string;
+}
+const { src, alt, caption, class: className } = Astro.props;
+---
+
+<figure class:list={['flex flex-col items-center gap-3', className]}>
+  <div class="w-full max-w-[240px] rounded-[2.4rem] border-[6px] border-neutral-900 bg-neutral-900 p-0.5 shadow-2xl dark:border-neutral-700">
+    <div class="relative aspect-[390/844] overflow-hidden rounded-[2rem] bg-[#dfdcd6]">
+      <div class="absolute top-2 left-1/2 z-10 h-5 w-20 -translate-x-1/2 rounded-full bg-neutral-900"></div>
+      {
+        src ? (
+          <Image src={src} alt={alt} widths={[240, 480]} sizes="240px" format="webp" class="size-full object-cover object-top" />
+        ) : (
+          <div class="size-full pt-9">
+            <slot />
+          </div>
+        )
+      }
+    </div>
+  </div>
+  <figcaption class="text-muted-foreground text-center text-xs">{caption}</figcaption>
+</figure>

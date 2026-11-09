@@ -1,0 +1,59 @@
+---
+// Illustration of the loyalty card screen, recreated from the Reset Coffee source (card/page.tsx).
+import { Coffee } from 'lucide-react';
+
+interface Props {
+  name: string;
+  coffees: number;
+}
+const { name, coffees } = Astro.props;
+const TOTAL = 9;
+const done = coffees >= TOTAL;
+// The real app is Spanish-only, so the illustration stays in Spanish in both languages.
+const txt = { hello: 'Hola', win: '¡Lo lograste!', goal: 'Junta 9 cafés y recibe un', prize: 'cappuccino, latte o americano gratis' };
+---
+
+<div class="flex flex-col items-center gap-3 px-3">
+  <p class="text-[13px] font-black tracking-tight text-neutral-900">RESET COFFEE</p>
+  <div class="relative w-full overflow-hidden rounded-2xl bg-[#3c5a41] p-3 text-white shadow-md">
+    <span class="absolute -top-8 -right-6 size-24 rounded-full bg-white/[0.06]"></span>
+    <div class="relative flex items-center gap-3">
+      <div class="text-center text-[9px] leading-tight font-bold">THE<br /><span class="text-sm">RESET</span><br />CLUB</div>
+      <div class="min-w-0 flex-1 border-l border-white/20 pl-3">
+        {
+          done ? (
+            <p class="text-lg leading-none text-[#f4a259]">{txt.win}</p>
+          ) : (
+            <p class="text-[9px] tracking-wider text-white/70 uppercase">{txt.hello}</p>
+          )
+        }
+        <p class="truncate text-xs font-bold">{name}</p>
+        {
+          !done && (
+            <p class="leading-none text-[#f4a259]">
+              <span class="text-3xl font-bold">{coffees}</span>
+              <span class="text-sm text-white/70"> / {TOTAL}</span>
+            </p>
+          )
+        }
+      </div>
+    </div>
+    <p class="relative mt-2 border-t border-white/15 pt-2 text-center text-[10px] leading-snug">
+      {txt.goal} <b>{txt.prize}</b>
+    </p>
+  </div>
+  <div class="grid w-full grid-cols-5 gap-1.5 rounded-2xl bg-white/70 p-3">
+    {
+      Array.from({ length: TOTAL + 1 }, (_, i) => (
+        <span
+          class:list={[
+            'flex aspect-square items-center justify-center rounded-full',
+            i === TOTAL ? 'bg-[#f4a259]/25 text-[#d9772b]' : i < coffees ? 'bg-[#3c5a41] text-white' : 'bg-neutral-200 text-neutral-400',
+          ]}
+        >
+          <Coffee className="size-3.5" />
+        </span>
+      ))
+    }
+  </div>
+</div>
