@@ -54,11 +54,11 @@ export const projects: Project[] = [
   {
     slug: 'club-all4bikers',
     image: all4bikersImg,
-    title: 'Club All4Bikers',
-    subtitle: { es: 'Club de socios para motociclistas', en: 'Members club for motorcyclists' },
+    title: 'Club Wilier',
+    subtitle: { es: 'Membresía de una tienda de ciclismo', en: 'Cycling store membership' },
     summary: {
-      es: 'Plataforma de socios para All4Bikers Chile: acceso con código de un solo uso enviado por correo y credencial de socio como pase de Apple Wallet.',
-      en: 'Members platform for All4Bikers Chile: one-time-code sign-in by email and a membership card delivered as an Apple Wallet pass.',
+      es: 'Club de socios para la tienda de ciclismo Wilier de All4Bikers Chile: acceso con código de un solo uso enviado por correo y tarjeta de membresía digital como pase de Apple Wallet.',
+      en: 'Members club for the Wilier cycling store by All4Bikers Chile: one-time-code sign-in by email and a digital membership card delivered as an Apple Wallet pass.',
     },
     tags: ['Full-stack', 'Wallet'],
     stack: ['Next.js', 'TypeScript', 'Neon', 'Drizzle ORM', 'Resend', 'shadcn/ui'],
