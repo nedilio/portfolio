@@ -16,6 +16,18 @@ export interface Job {
 // Most recent first.
 export const jobs: Job[] = [
   {
+    company: 'Kibernum · SBPAY',
+    role: { es: 'Desarrollador Full-Stack', en: 'Full-Stack Developer' },
+    start: '2026-10',
+    end: null,
+    location: { es: 'Santiago de Chile', en: 'Santiago, Chile' },
+    description: {
+      es: 'Actualizaciones e integraciones de servicios para el sitio web y el orquestador de servicios de SBPAY. Orquestador en Node.js con Express y TypeScript; sitio en PHP con Themosis sobre WordPress y JavaScript. Pruebas unitarias y documentación técnica en cada desarrollo.',
+      en: "Service updates and integrations for SBPAY's website and service orchestrator. Orchestrator built with Node.js, Express and TypeScript; website in PHP with Themosis on WordPress, plus JavaScript. Unit tests and technical documentation for every change.",
+    },
+    stack: ['Node.js', 'Express', 'TypeScript', 'PHP', 'Themosis', 'WordPress'],
+  },
+  {
     company: 'ACL · Vida Cámara',
     role: { es: 'Ingeniero de Software', en: 'Software Engineer' },
     start: '2025-07',
