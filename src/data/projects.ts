@@ -2,6 +2,7 @@ import type { ImageMetadata } from 'astro';
 import type { Localized } from '@/i18n/ui';
 import resetCoffeeImg from '@/assets/projects/reset-coffee.jpg';
 import all4bikersImg from '@/assets/projects/club-all4bikers.jpg';
+import all4bikersPassImg from '@/assets/projects/club-all4bikers-pass.png';
 import cokeLoggerImg from '@/assets/projects/coke-logger.jpg';
 import beneficiosImg from '@/assets/projects/beneficios-restaurantes.jpg';
 
@@ -16,6 +17,8 @@ export interface Project {
   stack: string[];
   /** Screenshot in src/assets/projects (optimized by astro:assets). Falls back to a mock. */
   image?: ImageMetadata;
+  /** Portrait mobile screenshot; shown instead of the browser window when present. */
+  phoneImage?: ImageMetadata;
   repo?: string;
   live?: string;
   /** "YYYY-MM" */
@@ -54,11 +57,12 @@ export const projects: Project[] = [
   {
     slug: 'club-all4bikers',
     image: all4bikersImg,
-    title: 'Club Wilier',
-    subtitle: { es: 'Membresía de una tienda de ciclismo', en: 'Cycling store membership' },
+    phoneImage: all4bikersPassImg,
+    title: 'Club All4Bikers',
+    subtitle: { es: 'Wilier Privilege Club · tienda de ciclismo', en: 'Wilier Privilege Club · cycling store' },
     summary: {
-      es: 'Club de socios para la tienda de ciclismo Wilier de All4Bikers Chile: acceso con código de un solo uso enviado por correo y tarjeta de membresía digital como pase de Apple Wallet.',
-      en: 'Members club for the Wilier cycling store by All4Bikers Chile: one-time-code sign-in by email and a digital membership card delivered as an Apple Wallet pass.',
+      es: 'Wilier Privilege Club, el club de socios de All4Bikers, tienda de ciclismo en Chile: acceso con código de un solo uso enviado por correo y tarjeta de membresía digital como pase de Apple Wallet.',
+      en: 'Wilier Privilege Club, the members club of All4Bikers, a cycling store in Chile: one-time-code sign-in by email and a digital membership card delivered as an Apple Wallet pass.',
     },
     tags: ['Full-stack', 'Wallet'],
     stack: ['Next.js', 'TypeScript', 'Neon', 'Drizzle ORM', 'Resend', 'shadcn/ui'],

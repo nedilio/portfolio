@@ -26,7 +26,10 @@ const host = project.live ? new URL(project.live).host : project.slug;
 >
   <!-- Browser window -->
   <div
-    class="bg-background/85 w-full max-w-xl -rotate-3 overflow-hidden rounded-2xl border shadow-2xl backdrop-blur transition duration-500 group-hover:rotate-0 group-hover:scale-[1.02]"
+    class:list={[
+      'bg-background/85 w-full -rotate-3 overflow-hidden rounded-2xl border shadow-2xl backdrop-blur transition duration-500 group-hover:rotate-0 group-hover:scale-[1.02]',
+      project.phoneImage ? 'max-w-md -translate-x-[10%] self-start' : 'max-w-xl',
+    ]}
   >
     <div class="flex items-center gap-1.5 border-b px-3 py-2.5">
       <span class="size-2.5 rounded-full bg-red-400"></span>
@@ -58,4 +61,22 @@ const host = project.live ? new URL(project.live).host : project.slug;
       )
     }
   </div>
+  {
+    project.phoneImage && (
+      <div class="absolute right-[6%] bottom-[-4%] w-[34%] max-w-[190px] rotate-6 transition duration-500 group-hover:rotate-3 group-hover:-translate-y-2">
+        <div class="overflow-hidden rounded-[1.6rem] border-[5px] border-neutral-900 bg-black shadow-2xl">
+          <Image
+            src={project.phoneImage}
+            alt={`${project.title} mobile screenshot`}
+            widths={[200, 400]}
+            sizes="190px"
+            format="webp"
+            quality={80}
+            loading="lazy"
+            class="h-auto w-full"
+          />
+        </div>
+      </div>
+    )
+  }
 </div>
