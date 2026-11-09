@@ -7,7 +7,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://nedilio.dev',
+  site: 'https://www.nedilio.dev',
   i18n: {
     defaultLocale: 'es',
     locales: ['es', 'en'],
