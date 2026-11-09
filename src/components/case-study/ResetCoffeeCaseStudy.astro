@@ -7,14 +7,16 @@ import Footer from '@/components/Footer.astro';
 import SectionLabel from '@/components/SectionLabel.astro';
 import Icon from '@/components/Icon.astro';
 import PhoneFrame from './PhoneFrame.astro';
+import { Image } from 'astro:assets';
 import CardMock from './CardMock.astro';
-import AdminMock from './AdminMock.astro';
 import type { Lang } from '@/i18n/ui';
 import { localePath } from '@/i18n/utils';
 import { caseStudyPaths } from '@/data/case-studies';
 import homeImg from '@/assets/projects/reset-coffee-home.png';
 import loginImg from '@/assets/projects/reset-coffee-login.png';
 import qrImg from '@/assets/projects/reset-coffee-resetqr.png';
+import cardImg from '@/assets/projects/reset-coffee-card.png';
+import adminImg from '@/assets/projects/reset-coffee-admin.png';
 
 interface Props {
   lang: Lang;
@@ -262,24 +264,31 @@ const learnings = [
         <PhoneFrame src={homeImg} alt={tx('Pantalla de inicio del club', 'Club home screen')} caption={tx('Inicio del club', 'Club home')} />
         <PhoneFrame src={loginImg} alt={tx('Pantalla de login con Google', 'Google sign-in screen')} caption={tx('Login con Google', 'Google sign-in')} />
         <PhoneFrame src={qrImg} alt={tx('Pantalla del QR para unirse', 'QR screen to join')} caption={tx('QR en el mostrador', 'QR at the counter')} />
-        <PhoneFrame alt="" caption={tx('Tarjeta en progreso*', 'Card in progress*')}>
-          <CardMock name="Camila Rojas" coffees={6} />
-        </PhoneFrame>
+        <PhoneFrame src={cardImg} alt={tx('Tarjeta de fidelidad con 1 de 9 cafés', 'Loyalty card with 1 of 9 coffees')} caption={tx('Tarjeta del cliente', 'Customer card')} />
         <PhoneFrame alt="" caption={tx('Premio desbloqueado*', 'Reward unlocked*')}>
           <CardMock name="Camila Rojas" coffees={9} />
         </PhoneFrame>
       </div>
-      <div class="mx-auto mt-12 max-w-2xl">
-        <AdminMock lang={lang} />
-        <p class="text-muted-foreground mt-3 text-center text-xs">
-          {tx('Panel de administración*', 'Admin dashboard*')}
-        </p>
-      </div>
+      <figure class="mx-auto mt-14 max-w-2xl">
+        <div class="overflow-hidden rounded-[1.75rem] border-[10px] border-neutral-900 bg-neutral-900 shadow-2xl dark:border-neutral-700">
+          <Image
+            src={adminImg}
+            alt={tx('Panel de administración con la lista de clientes y su progreso', 'Admin dashboard listing customers and their progress')}
+            widths={[640, 1024, 1536]}
+            sizes="(min-width: 768px) 672px, 92vw"
+            format="webp"
+            class="h-auto w-full rounded-[1rem]"
+          />
+        </div>
+        <figcaption class="text-muted-foreground mt-3 text-center text-xs">
+          {tx('Panel de administración (tablet del mostrador)', 'Admin dashboard (counter tablet)')}
+        </figcaption>
+      </figure>
       <p class="text-muted-foreground mt-8 text-center text-xs">
         {
           tx(
-            '* Ilustraciones recreadas a partir del código de la app (la tarjeta y el panel requieren login). Los nombres son ficticios.',
-            '* Illustrations recreated from the app’s source code (the card and the dashboard require sign-in). Names are fictitious.',
+            'Capturas de la app con datos de prueba. * Ilustración recreada a partir del código de la app.',
+            'Screenshots of the app with test data. * Illustration recreated from the app’s source code.',
           )
         }
       </p>
