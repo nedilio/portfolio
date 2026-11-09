@@ -18,9 +18,12 @@ export const profile = {
   } satisfies Localized,
   stats: [
     { value: '6+', label: { es: 'Años de experiencia', en: 'Years of experience' } },
-    { value: '40+', label: { es: 'Proyectos en GitHub', en: 'Projects on GitHub' } },
-    { value: '100%', label: { es: 'TypeScript', en: 'TypeScript' } },
-  ] satisfies { value: string; label: Localized }[],
+    { value: 'End-to-end', label: { es: 'Diseño, código y despliegue', en: 'Design, code and deployment' } },
+    {
+      value: { es: 'A tu medida', en: 'Tailored' },
+      label: { es: 'Soluciones personalizadas, no plantillas', en: 'Custom solutions, not templates' },
+    },
+  ] satisfies { value: string | Localized; label: Localized }[],
   email: 'izquierdonelson@gmail.com',
   socials: {
     github: 'https://github.com/nedilio',
