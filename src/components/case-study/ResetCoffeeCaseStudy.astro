@@ -12,6 +12,7 @@ import AdminMock from './AdminMock.astro';
 import type { Lang } from '@/i18n/ui';
 import { localePath } from '@/i18n/utils';
 import { caseStudyPaths } from '@/data/case-studies';
+import homeImg from '@/assets/projects/reset-coffee-home.png';
 import loginImg from '@/assets/projects/reset-coffee-login.png';
 import qrImg from '@/assets/projects/reset-coffee-resetqr.png';
 
@@ -257,9 +258,10 @@ const learnings = [
 
     <!-- Screens -->
     <section class="glass rounded-[2.5rem] px-4 py-12 sm:px-10">
-      <div class="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4">
-        <PhoneFrame src={qrImg} alt={tx('Pantalla del QR para unirse', 'QR screen to join')} caption={tx('QR en el mostrador', 'QR at the counter')} />
+      <div class="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 lg:grid-cols-5">
+        <PhoneFrame src={homeImg} alt={tx('Pantalla de inicio del club', 'Club home screen')} caption={tx('Inicio del club', 'Club home')} />
         <PhoneFrame src={loginImg} alt={tx('Pantalla de login con Google', 'Google sign-in screen')} caption={tx('Login con Google', 'Google sign-in')} />
+        <PhoneFrame src={qrImg} alt={tx('Pantalla del QR para unirse', 'QR screen to join')} caption={tx('QR en el mostrador', 'QR at the counter')} />
         <PhoneFrame alt="" caption={tx('Tarjeta en progreso*', 'Card in progress*')}>
           <CardMock name="Camila Rojas" coffees={6} />
         </PhoneFrame>
