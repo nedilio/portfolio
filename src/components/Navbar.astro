@@ -1,0 +1,115 @@
+---
+import { Menu } from 'lucide-react';
+import ThemeToggle from './ThemeToggle';
+import Icon from './Icon.astro';
+import type { Lang } from '@/i18n/ui';
+import { localePath, useTranslations } from '@/i18n/utils';
+import { profile } from '@/data/profile';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const otherLang: Lang = lang === 'es' ? 'en' : 'es';
+
+const links = [
+  { href: '#about', label: t('nav.about') },
+  { href: '#featured', label: t('nav.featured') },
+  { href: '#projects', label: t('nav.projects') },
+  { href: '#experience', label: t('nav.experience') },
+  { href: '#contact', label: t('nav.contact') },
+];
+---
+
+<header class="fixed inset-x-0 top-0 z-50 px-4 pt-4">
+  <nav
+    class="glass mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-full py-2 pr-2 pl-5"
+    aria-label="Main"
+  >
+    <a href={localePath(lang)} class="font-semibold tracking-tight">
+      {profile.shortName}<span class="text-lime-strong">.</span>
+    </a>
+
+    <ul class="hidden items-center gap-1 text-sm md:flex">
+      {
+        links.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              class="text-muted-foreground hover:text-foreground rounded-full px-3 py-1.5 transition hover:bg-[var(--glass)]"
+            >
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="flex items-center gap-2">
+      <a
+        href={profile.socials.github}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="GitHub"
+        class="glass hidden size-9 items-center justify-center rounded-full transition hover:scale-105 sm:inline-flex"
+      >
+        <Icon name="github" />
+      </a>
+      <a
+        href={profile.socials.linkedin}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="LinkedIn"
+        class="glass hidden size-9 items-center justify-center rounded-full transition hover:scale-105 sm:inline-flex"
+      >
+        <Icon name="linkedin" />
+      </a>
+      <a
+        href={localePath(otherLang)}
+        hreflang={otherLang}
+        aria-label={t('lang.switch')}
+        title={t('lang.switch')}
+        data-lang-switch
+        class="glass inline-flex h-9 items-center justify-center rounded-full px-3 font-mono text-xs uppercase transition hover:scale-105"
+      >
+        {otherLang}
+      </a>
+      <ThemeToggle client:load label={t('theme.toggle')} />
+
+      <details class="group relative md:hidden">
+        <summary
+          class="glass inline-flex size-9 cursor-pointer list-none items-center justify-center rounded-full [&::-webkit-details-marker]:hidden"
+          aria-label={t('nav.menu')}
+        >
+          <Menu className="size-4" />
+        </summary>
+        <ul
+          class="bg-popover/95 absolute top-12 right-0 flex w-48 flex-col gap-1 rounded-2xl border p-2 text-sm shadow-xl backdrop-blur-xl"
+        >
+          {
+            links.map((link) => (
+              <li>
+                <a href={link.href} class="hover:bg-muted block rounded-xl px-3 py-2">
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </details>
+    </div>
+  </nav>
+</header>
+
+<script>
+  // Close the mobile menu after picking a link
+  document.querySelectorAll<HTMLAnchorElement>('header details a').forEach((a) =>
+    a.addEventListener('click', () => a.closest('details')?.removeAttribute('open')),
+  );
+  // Keep the current section when switching language
+  const sw = document.querySelector<HTMLAnchorElement>('[data-lang-switch]');
+  sw?.addEventListener('click', () => {
+    if (location.hash) sw.href = sw.href.split('#')[0] + location.hash;
+  });
+</script>

@@ -1,0 +1,80 @@
+---
+import { ArrowUpRight, Check } from 'lucide-react';
+import SectionLabel from './SectionLabel.astro';
+import ProjectVisual from './ProjectVisual.astro';
+import Icon from './Icon.astro';
+import type { Lang } from '@/i18n/ui';
+import { formatMonth, l, useTranslations } from '@/i18n/utils';
+import { featuredProject as p } from '@/data/projects';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+{
+  p && (
+    <section id="featured" class="mx-auto max-w-6xl px-4 py-16 sm:py-24">
+      <div class="glass bg-tint-lime grid gap-6 rounded-[2.5rem] p-4 sm:p-6 lg:grid-cols-2">
+        <div class="flex flex-col justify-between gap-8 p-2 sm:p-6">
+          <div>
+            <SectionLabel text={t('featured.label')} />
+            <h2 class="mt-6 text-4xl font-semibold tracking-tight sm:text-6xl">{p.title}</h2>
+            <p class="text-muted-foreground mt-2 text-lg">{l(p.subtitle, lang)}</p>
+            <p class="mt-6 leading-relaxed">{l(p.summary, lang)}</p>
+            {p.highlights && (
+              <ul class="mt-6 space-y-2">
+                {p.highlights.map((h) => (
+                  <li class="flex items-center gap-3 text-sm">
+                    <span class="bg-lime text-lime-foreground inline-flex size-5 items-center justify-center rounded-full">
+                      <Check className="size-3" />
+                    </span>
+                    {l(h, lang)}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div>
+            <ul class="mb-6 flex flex-wrap gap-2">
+              {p.stack.map((s) => (
+                <li class="bg-background/60 rounded-full border px-3 py-1 font-mono text-xs uppercase">{s}</li>
+              ))}
+            </ul>
+            {p.start && (
+              <p class="text-muted-foreground mb-4 font-mono text-xs uppercase">
+                {t('projects.timeline')} <span class="text-lime-strong">•</span> {formatMonth(p.start, lang, '')} –{' '}
+                {formatMonth(p.end ?? null, lang, t('exp.present'))}
+              </p>
+            )}
+            <div class="flex flex-wrap gap-3">
+              {p.live && (
+                <a
+                  href={p.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="bg-lime text-lime-foreground inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition hover:-translate-y-0.5"
+                >
+                  {t('featured.visit')} <ArrowUpRight className="size-4" />
+                </a>
+              )}
+              {p.repo && (
+                <a
+                  href={p.repo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="glass inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition hover:-translate-y-0.5"
+                >
+                  <Icon name="github" /> {t('featured.code')}
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+        <ProjectVisual project={p} class="min-h-80 lg:min-h-[32rem]" />
+      </div>
+    </section>
+  )
+}

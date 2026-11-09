@@ -1,0 +1,59 @@
+---
+import type { Project } from '@/data/projects';
+
+interface Props {
+  project: Project;
+  class?: string;
+}
+const { project, class: className } = Astro.props;
+
+const gradients: Record<Project['tint'], string> = {
+  lime: 'from-lime-200 via-emerald-100 to-yellow-100 dark:from-lime-900/40 dark:via-emerald-900/30 dark:to-yellow-900/20',
+  lavender: 'from-indigo-200 via-violet-100 to-sky-100 dark:from-indigo-900/40 dark:via-violet-900/30 dark:to-sky-900/20',
+  pink: 'from-pink-200 via-rose-100 to-orange-100 dark:from-pink-900/40 dark:via-rose-900/30 dark:to-orange-900/20',
+  amber: 'from-amber-200 via-yellow-100 to-orange-100 dark:from-amber-900/40 dark:via-yellow-900/30 dark:to-orange-900/20',
+};
+const host = project.live ? new URL(project.live).host : project.slug;
+---
+
+<div
+  class:list={[
+    'glass group relative flex items-center justify-center overflow-hidden rounded-[2rem] bg-gradient-to-br p-6 sm:p-10',
+    gradients[project.tint],
+    className,
+  ]}
+>
+  <!-- Browser window -->
+  <div
+    class="bg-background/85 w-full max-w-xl -rotate-3 overflow-hidden rounded-2xl border shadow-2xl backdrop-blur transition duration-500 group-hover:rotate-0 group-hover:scale-[1.02]"
+  >
+    <div class="flex items-center gap-1.5 border-b px-3 py-2.5">
+      <span class="size-2.5 rounded-full bg-red-400"></span>
+      <span class="size-2.5 rounded-full bg-yellow-400"></span>
+      <span class="size-2.5 rounded-full bg-green-400"></span>
+      <span class="bg-muted text-muted-foreground ml-3 truncate rounded-full px-3 py-0.5 font-mono text-[10px]">{host}</span>
+    </div>
+    {
+      project.image ? (
+        <img
+          src={project.image}
+          alt={`${project.title} screenshot`}
+          width="1280"
+          height="800"
+          loading="lazy"
+          decoding="async"
+          class="aspect-[16/10] w-full object-cover object-top"
+        />
+      ) : (
+        <div class="p-4">
+          <p class="text-2xl font-semibold tracking-tight">{project.title}</p>
+          <div class="mt-4 space-y-2">
+            <div class="bg-muted h-2 w-4/5 rounded-full" />
+            <div class="bg-muted h-2 w-3/5 rounded-full" />
+            <div class="bg-lime mt-4 h-6 w-24 rounded-full" />
+          </div>
+        </div>
+      )
+    }
+  </div>
+</div>

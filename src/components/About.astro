@@ -1,0 +1,55 @@
+---
+import SectionLabel from './SectionLabel.astro';
+import type { Lang } from '@/i18n/ui';
+import { l, useTranslations } from '@/i18n/utils';
+import { profile, stack } from '@/data/profile';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const groups = [
+  { title: 'Frontend', items: stack.frontend },
+  { title: 'Backend', items: stack.backend },
+  { title: lang === 'es' ? 'Herramientas' : 'Tools', items: stack.tools },
+];
+---
+
+<section id="about" class="mx-auto max-w-6xl px-4 py-16 sm:py-24">
+  <div class="grid gap-8 lg:grid-cols-[1fr_2fr]">
+    <div><SectionLabel text={t('about.label')} /></div>
+    <div>
+      <h2 class="text-3xl font-semibold tracking-tight text-balance sm:text-5xl">
+        {t('about.title.a')} <span class="text-muted-foreground">{t('about.title.b')}</span>
+      </h2>
+      <p class="text-muted-foreground mt-6 max-w-2xl text-lg leading-relaxed">{l(profile.about, lang)}</p>
+
+      <dl class="mt-10 grid grid-cols-3 gap-3">
+        {
+          profile.stats.map((s) => (
+            <div class="glass rounded-3xl p-4 sm:p-6">
+              <dt class="text-muted-foreground order-2 text-xs sm:text-sm">{l(s.label, lang)}</dt>
+              <dd class="text-3xl font-semibold tracking-tight sm:text-4xl">{s.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="mt-8 grid gap-4 sm:grid-cols-3">
+        {
+          groups.map((g) => (
+            <div>
+              <h3 class="text-muted-foreground mb-3 font-mono text-xs tracking-wider uppercase">{g.title}</h3>
+              <ul class="flex flex-wrap gap-2">
+                {g.items.map((i) => (
+                  <li class="border-border bg-background/40 rounded-full border px-3 py-1 text-xs">{i}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

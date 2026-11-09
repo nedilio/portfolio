@@ -1,0 +1,49 @@
+---
+import SectionLabel from './SectionLabel.astro';
+import Experience, { type TimelineItem } from './Experience';
+import type { Lang } from '@/i18n/ui';
+import { formatMonth, l, useTranslations } from '@/i18n/utils';
+import { jobs } from '@/data/jobs';
+import { education } from '@/data/education';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const period = (start: string, end: string | null) =>
+  `${formatMonth(start, lang, '')} – ${formatMonth(end, lang, t('exp.present'))}`;
+
+const work: TimelineItem[] = jobs.map((j) => ({
+  title: `${l(j.role, lang)} · ${j.company}`,
+  subtitle: j.location ? l(j.location, lang) : j.company,
+  period: period(j.start, j.end),
+  description: l(j.description, lang),
+  tags: j.stack,
+}));
+
+const edu: TimelineItem[] = education.map((e) => ({
+  title: l(e.title, lang),
+  subtitle: e.school,
+  period: period(e.start, e.end),
+  description: e.description ? l(e.description, lang) : undefined,
+}));
+---
+
+<section id="experience" class="mx-auto max-w-6xl px-4 py-16 sm:py-24">
+  <div class="grid gap-8 lg:grid-cols-[1fr_2fr]">
+    <div><SectionLabel text={t('exp.label')} /></div>
+    <div>
+      <h2 class="mb-8 text-3xl font-semibold tracking-tight sm:text-5xl">
+        {t('exp.title.a')} <span class="text-muted-foreground">{t('exp.title.b')}</span>
+      </h2>
+      <Experience
+        client:visible
+        workLabel={t('exp.work')}
+        educationLabel={t('exp.education')}
+        work={work}
+        education={edu}
+      />
+    </div>
+  </div>
+</section>

@@ -1,0 +1,61 @@
+---
+import '@/styles/global.css';
+import { languages, type Lang } from '@/i18n/ui';
+import { localePath, useTranslations } from '@/i18n/utils';
+import { profile } from '@/data/profile';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const title = `${profile.name} — ${t('meta.title')}`;
+const description = t('meta.description');
+const canonical = new URL(localePath(lang), Astro.site);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {
+      (Object.keys(languages) as Lang[]).map((code) => (
+        <link rel="alternate" hreflang={code} href={new URL(localePath(code), Astro.site)} />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site)} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_ES' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#f6f8ee" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121611" media="(prefers-color-scheme: dark)" />
+    <script is:inline>
+      (() => {
+        let theme = null;
+        try { theme = localStorage.getItem('theme'); } catch {}
+        const dark = theme ? theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.classList.toggle('dark', dark);
+      })();
+    </script>
+  </head>
+  <body class="min-h-dvh">
+    <!-- Glass backdrop: soft gradient blobs + faint grid -->
+    <div aria-hidden="true" class="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+      <div class="bg-grid absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_75%)]"></div>
+      <div class="absolute -top-40 -left-32 size-[34rem] rounded-full blur-3xl" style="background: var(--blob-1)"></div>
+      <div class="absolute top-1/3 -right-40 size-[30rem] rounded-full blur-3xl" style="background: var(--blob-2)"></div>
+      <div class="absolute -bottom-40 left-1/4 size-[28rem] rounded-full blur-3xl" style="background: var(--blob-3)"></div>
+    </div>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,94 @@
+---
+import { ArrowDown, ArrowRight, Code2, Layers, Server, Sparkles } from 'lucide-react';
+import type { Lang } from '@/i18n/ui';
+import { l, useTranslations } from '@/i18n/utils';
+import { profile } from '@/data/profile';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const cards = [
+  { icon: Code2, title: 'React · TypeScript', text: { es: 'Interfaces y design systems', en: 'Interfaces & design systems' }, tint: 'bg-tint-lime', shape: 'rounded-[2rem] rounded-tl-[4rem]' },
+  { icon: Layers, title: 'Astro · Next.js', text: { es: 'Sitios rápidos y SEO', en: 'Fast, SEO-friendly sites' }, tint: 'bg-tint-lavender', shape: 'rounded-[2rem]' },
+  { icon: Server, title: 'NestJS · Express', text: { es: 'APIs y backend en Node', en: 'APIs & Node backends' }, tint: 'bg-tint-pink', shape: 'rounded-[2rem]' },
+  { icon: Sparkles, title: 'UI / UX', text: { es: 'Detalle, accesibilidad y animación', en: 'Detail, a11y & motion' }, tint: 'bg-tint-amber', shape: 'rounded-[2rem] rounded-tr-[4rem]' },
+];
+---
+
+<section id="home" class="mx-auto max-w-6xl px-4 pt-28 sm:pt-32">
+  <div class="glass relative overflow-hidden rounded-[2rem] p-6 sm:rounded-[2.5rem] sm:p-10 lg:p-14">
+    <div class="bg-grid absolute inset-0 -z-10 opacity-70" aria-hidden="true"></div>
+
+    <div class="grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+      <div>
+        <p class="text-muted-foreground mb-4 text-lg">{t('hero.hello')} {profile.name}…</p>
+        <h1 class="text-4xl leading-[1.05] font-semibold tracking-tight text-balance sm:text-5xl lg:text-6xl">
+          {t('hero.title.a')}<br />
+          <span class="text-muted-foreground">{t('hero.title.b')}</span><br />
+          {t('hero.title.c')}
+          <span class="bg-lime ml-1 inline-block size-3 rounded-full align-middle sm:size-4" aria-hidden="true"></span>
+        </h1>
+      </div>
+
+      <div class="flex flex-col gap-6 lg:items-end lg:text-right">
+        <p class="text-muted-foreground max-w-md leading-relaxed">
+          <span class="text-foreground inline-flex items-center gap-2 font-medium">
+            <span class="relative flex size-2">
+              <span class="bg-lime absolute inline-flex size-full animate-ping rounded-full opacity-75"></span>
+              <span class="bg-lime relative inline-flex size-2 rounded-full"></span>
+            </span>
+            <em>{l(profile.role, lang)}</em>
+          </span>
+          <br />
+          {l(profile.heroDescription, lang)}
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <a
+            href="#contact"
+            class="bg-lime text-lime-foreground inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold shadow-[0_8px_30px_-8px_var(--lime)] transition hover:-translate-y-0.5"
+          >
+            {t('hero.cta')} <ArrowRight className="size-4" />
+          </a>
+          <a
+            href="#projects"
+            class="glass inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition hover:-translate-y-0.5"
+          >
+            {t('hero.cta2')}
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative mt-12 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+      {
+        cards.map((card) => (
+          <div
+            class:list={[
+              'glass flex min-h-40 flex-col justify-between gap-6 p-5 transition hover:-translate-y-1 sm:min-h-52',
+              card.tint,
+              card.shape,
+            ]}
+          >
+            <span class="bg-background/70 inline-flex size-11 items-center justify-center rounded-2xl">
+              <card.icon className="size-5" />
+            </span>
+            <div>
+              <p class="font-semibold">{card.title}</p>
+              <p class="text-muted-foreground text-sm">{l(card.text, lang)}</p>
+            </div>
+          </div>
+        ))
+      }
+      <a
+        href="#about"
+        class="glass absolute -top-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1 rounded-full px-2 py-3 text-xs lg:flex"
+        aria-label={t('hero.scroll')}
+      >
+        <ArrowDown className="size-4 animate-bounce" />
+      </a>
+    </div>
+  </div>
+</section>
