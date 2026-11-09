@@ -8,7 +8,6 @@ import SectionLabel from '@/components/SectionLabel.astro';
 import Icon from '@/components/Icon.astro';
 import PhoneFrame from './PhoneFrame.astro';
 import { Image } from 'astro:assets';
-import CardMock from './CardMock.astro';
 import type { Lang } from '@/i18n/ui';
 import { localePath } from '@/i18n/utils';
 import { caseStudyPaths } from '@/data/case-studies';
@@ -16,6 +15,7 @@ import homeImg from '@/assets/projects/reset-coffee-home.png';
 import loginImg from '@/assets/projects/reset-coffee-login.png';
 import qrImg from '@/assets/projects/reset-coffee-resetqr.png';
 import cardImg from '@/assets/projects/reset-coffee-card.png';
+import cardFullImg from '@/assets/projects/reset-coffee-card-full.png';
 import adminImg from '@/assets/projects/reset-coffee-admin.png';
 
 interface Props {
@@ -265,9 +265,7 @@ const learnings = [
         <PhoneFrame src={loginImg} alt={tx('Pantalla de login con Google', 'Google sign-in screen')} caption={tx('Login con Google', 'Google sign-in')} />
         <PhoneFrame src={qrImg} alt={tx('Pantalla del QR para unirse', 'QR screen to join')} caption={tx('QR en el mostrador', 'QR at the counter')} />
         <PhoneFrame src={cardImg} alt={tx('Tarjeta de fidelidad con 1 de 9 cafés', 'Loyalty card with 1 of 9 coffees')} caption={tx('Tarjeta del cliente', 'Customer card')} />
-        <PhoneFrame alt="" caption={tx('Premio desbloqueado*', 'Reward unlocked*')}>
-          <CardMock name="Camila Rojas" coffees={9} />
-        </PhoneFrame>
+        <PhoneFrame src={cardFullImg} alt={tx('Tarjeta completa con el premio desbloqueado', 'Completed card with the reward unlocked')} caption={tx('Premio desbloqueado', 'Reward unlocked')} />
       </div>
       <figure class="mx-auto mt-14 max-w-2xl">
         <div class="overflow-hidden rounded-[1.75rem] border-[10px] border-neutral-900 bg-neutral-900 shadow-2xl dark:border-neutral-700">
@@ -287,8 +285,8 @@ const learnings = [
       <p class="text-muted-foreground mt-8 text-center text-xs">
         {
           tx(
-            'Capturas de la app con datos de prueba. * Ilustración recreada a partir del código de la app.',
-            'Screenshots of the app with test data. * Illustration recreated from the app’s source code.',
+            'Capturas de la app con datos de prueba; nombres y fotos de perfil reemplazados.',
+            'Screenshots of the app with test data; names and profile photos replaced.',
           )
         }
       </p>
