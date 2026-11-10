@@ -1,0 +1,53 @@
+/*
+ * nedilio.dev — brand tokens (Tailwind CSS v4)
+ * Source: nedilio-brand/tokens/brand.css, adapted to this site:
+ *  - No --font-sans / --font-mono: the site keeps Geist; only --font-display (Inter Tight) is added.
+ *  - No --border / --muted / --accent semantic tokens: those names belong to shadcn in global.css.
+ *    Use --border, --muted-foreground and --color-lime instead.
+ *  - Dark mode follows the `.dark` class only (the inline script in BaseLayout applies the
+ *    system preference), so there is no prefers-color-scheme block here.
+ * Gives you utilities like bg-ink, text-moss, font-display, tracking-display, rounded-card…
+ */
+
+@theme {
+  /* Palette */
+  --color-lime: #BEF264;   /* accent: cursor, final dot, primary buttons. ≤10% of any piece */
+  --color-ink: #121611;    /* dark background / text on light */
+  --color-ink-deep: #0B0D0A;
+  --color-ink-line: #2C3229; /* borders on dark */
+  --color-cream: #F4F5EE;  /* light background / text on dark */
+  --color-fog: #E6E8DE;    /* light secondary surface */
+  --color-line: #DDE0D4;   /* borders on light */
+  --color-moss: #4D7C0F;   /* green for text/icons on light (lime fails contrast there) */
+  --color-stone: #A3A89B;  /* secondary text on dark */
+  --color-stone-dark: #5B6156; /* secondary text on light */
+
+  /* Type */
+  --font-display: "Inter Tight Variable", "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+
+  --tracking-display: -0.045em; /* wordmark & hero headings */
+  --tracking-heading: -0.03em;
+  --tracking-label: 0.12em;     /* mono uppercase labels */
+
+  /* Shape */
+  --radius-card: 28px;
+  --radius-panel: 20px;
+  --radius-pill: 999px;
+}
+
+/* Semantic tokens — light by default, dark with .dark on <html> */
+:root {
+  --bg: var(--color-cream);
+  --surface: #FFFFFF;
+  --fg: var(--color-ink);
+  --accent-fg: var(--color-ink);    /* text on lime */
+  --accent-text: var(--color-moss); /* accent used AS text color */
+}
+
+.dark,
+[data-theme="dark"] {
+  --bg: var(--color-ink);
+  --surface: var(--color-ink-deep);
+  --fg: var(--color-cream);
+  --accent-text: var(--color-lime);
+}
