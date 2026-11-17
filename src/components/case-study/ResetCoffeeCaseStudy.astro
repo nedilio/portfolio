@@ -1,6 +1,6 @@
 ---
 import { Code } from 'astro:components';
-import { ArrowLeft, ArrowRight, ArrowUpRight, BarChart3, KeyRound, Lock, RefreshCcw, Search, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, BarChart3, KeyRound, Lock, RefreshCcw, ScanLine, Search, ShieldCheck, Store, Wallet } from 'lucide-react';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import Navbar from '@/components/Navbar.astro';
 import Footer from '@/components/Footer.astro';
@@ -31,48 +31,72 @@ const meta = [
   { k: tx('Rol', 'Role'), v: tx('Diseño y desarrollo full-stack', 'Full-stack design & development') },
   { k: tx('Cliente', 'Client'), v: 'Reset Coffee · Providencia' },
   { k: tx('Período', 'Timeline'), v: tx('Ago 2024 – actualidad', 'Aug 2024 – present') },
-  { k: 'Stack', v: 'Next.js · TypeScript · Supabase · NextAuth · PostHog' },
+  { k: 'Stack', v: 'Next.js · TypeScript · Supabase · NextAuth · Apple Wallet · PostHog' },
 ];
 
 const flow = [
   {
     n: '01',
-    title: tx('Escanea el QR', 'Scan the QR'),
-    text: tx('Un QR en la tablet del mostrador lleva al cliente directo al club.', 'A QR code on the counter tablet takes customers straight to the club.'),
+    title: tx('Únete con un QR', 'Join with a QR code'),
+    text: tx(
+      'Un QR en la tablet del mostrador lleva al club. Login con Google en un toque, sin contraseñas ni formularios.',
+      'A QR code on the counter tablet leads to the club. One-tap Google sign-in, no passwords or forms.',
+    ),
   },
   {
     n: '02',
-    title: tx('Login con Google', 'Sign in with Google'),
-    text: tx('Un toque y queda registrado. Sin contraseñas ni formularios.', 'One tap and they are in. No passwords, no forms.'),
+    title: tx('Guarda la tarjeta en Wallet', 'Save the card to Wallet'),
+    text: tx(
+      'La tarjeta se agrega a Apple Wallet con su propio QR. Sin iPhone, el mismo QR aparece en la tarjeta web.',
+      'The card goes into Apple Wallet with its own QR code. Without an iPhone, the same QR shows on the web card.',
+    ),
   },
   {
     n: '03',
-    title: tx('Suma en cada visita', 'Collect on every visit'),
-    text: tx('El barista busca al cliente en el panel y suma su café.', 'The barista finds the customer in the dashboard and adds their coffee.'),
+    title: tx('Escanea en cada visita', 'Scan on every visit'),
+    text: tx(
+      'El barista escanea el QR con la cámara o un lector, y el pase en el teléfono se actualiza al instante con una notificación.',
+      'The barista scans the QR with the camera or a scanner, and the pass on the phone updates instantly with a notification.',
+    ),
   },
   {
     n: '04',
-    title: tx('Canjea el premio', 'Redeem the reward'),
-    text: tx('Al llegar a 9, la tarjeta celebra con confetti y el barista canjea el café gratis.', 'At 9 the card celebrates with confetti, and the barista redeems the free coffee.'),
+    title: tx('Canje automático', 'Automatic redemption'),
+    text: tx(
+      'Al llegar a 9, escanear la tarjeta canjea el café gratis y la reinicia, con opción de deshacer.',
+      'At 9, scanning the card redeems the free coffee and resets it, with an undo option.',
+    ),
   },
 ];
 
 const casCode = `// ${tx('Nunca confiar en el conteo que envía el navegador:', "Never trust the count sent by the browser:")}
 // ${tx('se lee el valor actual desde la base de datos.', 'read the current value from the database.')}
 const { data: client } = await supabase
-  .from(TABLE_NAME).select("email, coffees").eq("id", id).maybeSingle();
-
-if (client.coffees >= COFFEES_TO_EXCHANGE) {
-  return { error: "Client already has a free coffee." };
-}
+  .from(TABLE_NAME).select(CLIENT_COLUMNS).eq("id", id).maybeSingle();
 
 // Compare-and-set: ${tx('solo actualiza si nadie cambió el conteo entretanto.', 'only updates if nobody changed the count meanwhile.')}
 const { data: updated } = await supabase
   .from(TABLE_NAME)
-  .update({ coffees: client.coffees + 1 })
+  .update({ coffees: 0, rewards_redeemed: client.rewards_redeemed + 1 })
   .eq("id", id)
   .eq("coffees", client.coffees)
   .select("id");`;
+
+const scanCode = `export const addCoffeeByToken = async (token: string) => {
+  if (!(await isAdmin())) return UNAUTHORIZED;
+  // ${tx('QR firmado: un código alterado o inventado no pasa.', 'Signed QR: a tampered or made-up code is rejected.')}
+  const id = verifyClientToken(token);
+  if (!id) return { error: "Código no válido." };
+
+  // ${tx('Una tarjeta llena se canjea en vez de sumar.', 'A full card is redeemed instead of adding one.')}
+  return current.coffees >= COFFEES_TO_EXCHANGE
+    ? applyRedeem(id, "scan")
+    : applyCoffeeAdded(id, "scan");
+};
+
+// ${tx('Después de cada cambio: un push vacío le pide al iPhone', 'After every change: an empty push tells the iPhone')}
+// ${tx('que vuelva a pedir el pase. Sin polling.', 'to fetch the pass again. No polling.')}
+notifyPassChanged(id);`;
 
 const guardCode = `// ${tx('Las Server Actions son endpoints POST públicos:', 'Server Actions are public POST endpoints:')}
 // ${tx('cada acción de admin debe verificar el rol por sí misma.', 'every admin action must check the role itself.')}
@@ -88,11 +112,20 @@ export const addCoffee = async (formData: FormData) => {
 
 const decisions = [
   {
+    icon: Wallet,
+    title: tx('Un pase de Apple Wallet que se actualiza solo', 'An Apple Wallet pass that updates itself'),
+    text: tx(
+      'La tarjeta vive en el teléfono como pase de Wallet. Implementé el web service de PassKit: cuando el barista suma un café, el servidor envía un push vacío por APNs y el iPhone descarga el pase actualizado, con la franja de sellos generada en cada request y un aviso que distingue un café sumado de un premio canjeado. El QR va firmado, así que no se puede falsificar ni adivinar el de otro cliente.',
+      'The card lives on the phone as a Wallet pass. I implemented the PassKit web service: when the barista adds a coffee, the server sends an empty APNs push and the iPhone downloads the updated pass, with the stamp strip rendered per request and a notice that tells an added coffee from a redeemed reward. The QR is signed, so it cannot be forged or guessed for another customer.',
+    ),
+    code: scanCode,
+  },
+  {
     icon: RefreshCcw,
     title: tx('Conteo atómico, sin condiciones de carrera', 'Atomic counting, no race conditions'),
     text: tx(
-      'En hora punta, dos personas del staff pueden sumar el café del mismo cliente casi al mismo tiempo. La actualización usa compare-and-set: solo se aplica si el conteo no cambió desde que se leyó, y el servidor nunca confía en el número que envía el navegador.',
-      'At rush hour, two staff members can add a coffee for the same customer at almost the same time. The update uses compare-and-set: it only applies if the count has not changed since it was read, and the server never trusts the number sent by the browser.',
+      'En hora punta, un escaneo y un clic pueden llegar casi al mismo tiempo para el mismo cliente. Sumar y canjear usan compare-and-set: el cambio solo se aplica si el conteo no cambió desde que se leyó, y el servidor nunca confía en el número que envía el navegador.',
+      'At rush hour, a scan and a click can arrive for the same customer almost at once. Adding and redeeming use compare-and-set: the change only applies if the count has not changed since it was read, and the server never trusts the number sent by the browser.',
     ),
     code: casCode,
   },
@@ -100,14 +133,46 @@ const decisions = [
     icon: ShieldCheck,
     title: tx('Server Actions tratadas como endpoints públicos', 'Server Actions treated as public endpoints'),
     text: tx(
-      'Ocultar un botón no protege nada: cualquiera puede invocar una Server Action con un POST. Por eso cada acción de administración (sumar, canjear, eliminar) verifica el rol en el servidor antes de tocar la base de datos.',
-      'Hiding a button protects nothing: anyone can invoke a Server Action with a POST. So every admin action (add, redeem, delete) checks the role on the server before touching the database.',
+      'Ocultar un botón no protege nada: cualquiera puede invocar una Server Action con un POST. Por eso cada acción de administración (sumar, escanear, canjear, eliminar) verifica el rol en el servidor antes de tocar la base de datos.',
+      'Hiding a button protects nothing: anyone can invoke a Server Action with a POST. So every admin action (add, scan, redeem, delete) checks the role on the server before touching the database.',
     ),
     code: guardCode,
   },
 ];
 
 const smaller = [
+  {
+    icon: ScanLine,
+    title: tx('Escaneo pensado para el mostrador', 'Scanning built for the counter'),
+    text: tx(
+      'Funciona con la cámara del dispositivo o con lectores USB/Bluetooth. El QR usa solo letras y números para que un lector con teclado en español no lo altere, las lecturas repetidas en 5 segundos se ignoran y cada acción se puede deshacer.',
+      'It works with the device camera or USB/Bluetooth scanners. The QR uses only letters and digits so a scanner typing under a Spanish keyboard layout cannot mangle it, repeated reads within 5 seconds are ignored and every action can be undone.',
+    ),
+  },
+  {
+    icon: Store,
+    title: tx('Varios locales', 'Multiple shops'),
+    text: tx(
+      'Cada dispositivo del staff elige su local, así cada café queda registrado donde ocurrió. El pase de Wallet aparece en la pantalla de bloqueo al acercarse a cualquiera de las tiendas.',
+      'Each staff device picks its shop, so every coffee is recorded where it happened. The Wallet pass shows on the lock screen when the customer is near any of the shops.',
+    ),
+  },
+  {
+    icon: BarChart3,
+    title: tx('Analítica de producto desde el servidor', 'Server-side product analytics'),
+    text: tx(
+      'Eventos de PostHog en el servidor para todo el embudo: registro, cafés sumados, premios ganados y canjeados, y el ciclo del pase de Wallet (descargado, instalado, eliminado). Cada evento lleva el local y contadores históricos por cliente.',
+      'Server-side PostHog events cover the whole funnel: sign-up, coffees added, rewards earned and redeemed, and the Wallet pass lifecycle (downloaded, installed, removed). Every event carries the shop and lifetime counters per customer.',
+    ),
+  },
+  {
+    icon: Search,
+    title: tx('Un panel rápido de usar', 'A dashboard that is quick to use'),
+    text: tx(
+      'Búsqueda por nombre que ignora tildes, paginación de 10 clientes y streaming con Suspense y skeletons, para encontrar a alguien en segundos con la fila esperando.',
+      'Accent-insensitive name search, pagination of 10 customers and streaming with Suspense and skeletons, so staff can find someone in seconds with a queue waiting.',
+    ),
+  },
   {
     icon: KeyRound,
     title: tx('Roles sin tabla de permisos', 'Roles without a permissions table'),
@@ -124,30 +189,16 @@ const smaller = [
       'The session callback, which runs on every request, never queries the database. Sign-up happens once per login through an upsert by email that never overwrites collected coffees, and the card page self-heals if the row is missing.',
     ),
   },
-  {
-    icon: BarChart3,
-    title: tx('Analítica de producto desde el servidor', 'Server-side product analytics'),
-    text: tx(
-      'Eventos de PostHog en el servidor para todo el embudo: registro, login, café sumado, premio ganado y premio canjeado. Distingue un canje real de una corrección manual.',
-      'Server-side PostHog events cover the whole funnel: sign-up, login, coffee added, reward earned and reward redeemed. It tells a real redemption apart from a manual correction.',
-    ),
-  },
-  {
-    icon: Search,
-    title: tx('Un panel pensado para el mostrador', 'A dashboard built for the counter'),
-    text: tx(
-      'Búsqueda por nombre que ignora tildes, paginación de 10 clientes y streaming con Suspense y skeletons, para encontrar a alguien en segundos con la fila esperando.',
-      'Accent-insensitive name search, pagination of 10 customers and streaming with Suspense and skeletons, so staff can find someone in seconds with a queue waiting.',
-    ),
-  },
 ];
 
 const stack = [
-  { layer: tx('Frontend', 'Frontend'), items: 'Next.js App Router · React · TypeScript · Tailwind CSS · Radix UI' },
-  { layer: tx('Auth', 'Auth'), items: 'NextAuth (Auth.js) · Google OAuth · middleware' },
-  { layer: tx('Datos', 'Data'), items: 'Supabase (Postgres) · Server Actions' },
+  { layer: tx('Frontend', 'Frontend'), items: 'Next.js 16 App Router · React 19 · TypeScript · Tailwind CSS · Radix UI' },
+  { layer: tx('Auth', 'Auth'), items: 'NextAuth (Auth.js) · Google OAuth · proxy (middleware)' },
+  { layer: tx('Datos', 'Data'), items: 'Supabase (Postgres) · Server Actions · RLS' },
+  { layer: 'Wallet', items: 'Apple Wallet (PassKit web service) · passkit-generator · APNs · next/og' },
+  { layer: tx('Escaneo', 'Scanning'), items: tx('qr-scanner (cámara) · lectores USB/Bluetooth', 'qr-scanner (camera) · USB/Bluetooth scanners') },
   { layer: tx('Producto', 'Product'), items: 'PostHog · Vercel Analytics · Speed Insights' },
-  { layer: 'Deploy', items: 'Vercel' },
+  { layer: 'Deploy', items: tx('Vercel · CI con GitHub Actions', 'Vercel · CI with GitHub Actions') },
 ];
 
 const learnings = [
@@ -156,8 +207,12 @@ const learnings = [
     'In a small app, concurrency and permission details matter as much as in a big one: a duplicated count is a free coffee given away.',
   ),
   tx(
-    'Diseñar para el mostrador cambia las prioridades: menos pasos, búsqueda tolerante y estados de carga claros valen más que cualquier animación.',
-    'Designing for the counter changes priorities: fewer steps, forgiving search and clear loading states matter more than any animation.',
+    'Integrar Apple Wallet obliga a diseñar para un cliente que no controlas: Apple llama a tu servidor cuando quiere, así que cada respuesta tiene que ser idempotente y segura sin sesión.',
+    'Integrating Apple Wallet means designing for a client you do not control: Apple calls your server whenever it wants, so every response has to be idempotent and safe without a session.',
+  ),
+  tx(
+    'Diseñar para el mostrador cambia las prioridades: menos pasos, escaneo tolerante a errores y poder deshacer valen más que cualquier animación.',
+    'Designing for the counter changes priorities: fewer steps, error-tolerant scanning and being able to undo matter more than any animation.',
   ),
   tx(
     'Medir desde el servidor da datos confiables desde el primer día, sin depender de bloqueadores de anuncios ni del navegador del cliente.',
@@ -171,8 +226,8 @@ const learnings = [
   paths={paths}
   title={tx('Reset Coffee — Caso de estudio · Nelson Izquierdo', 'Reset Coffee — Case study · Nelson Izquierdo')}
   description={tx(
-    'Cómo diseñé y construí The RESeT Club, la tarjeta de fidelidad digital de Reset Coffee, con Next.js, Supabase y NextAuth.',
-    'How I designed and built The RESeT Club, Reset Coffee’s digital loyalty card, with Next.js, Supabase and NextAuth.',
+    'Cómo diseñé y construí The RESeT Club, la tarjeta de fidelidad digital de Reset Coffee, con Next.js, Supabase y Apple Wallet.',
+    'How I designed and built The RESeT Club, Reset Coffee’s digital loyalty card, with Next.js, Supabase and Apple Wallet.',
   )}
 >
   <Navbar lang={lang} altHref={paths[es ? 'en' : 'es']} isHome={false} />
@@ -320,7 +375,7 @@ const learnings = [
         }
       </div>
 
-      <div class="mt-5 grid gap-5 sm:grid-cols-2">
+      <div class="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {
           smaller.map((d) => (
             <article class="glass rounded-[2rem] p-6 sm:p-8">
