@@ -1,6 +1,6 @@
 /*
  * nedilio.dev — brand tokens (Tailwind CSS v4)
- * Source: nedilio-brand/tokens/brand.css, adapted to this site:
+ * Source: brand/tokens/brand.css, adapted to this site:
  *  - No --font-sans / --font-mono: the site keeps Geist; only --font-display (Inter Tight) is added.
  *  - No --border / --muted / --accent semantic tokens: those names belong to shadcn in global.css.
  *    Use --border, --muted-foreground and --color-lime instead.
