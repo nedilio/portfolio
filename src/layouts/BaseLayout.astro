@@ -3,7 +3,6 @@ import '@/styles/global.css';
 import { languages, type Lang } from '@/i18n/ui';
 import { localePath, useTranslations } from '@/i18n/utils';
 import { profile } from '@/data/profile';
-import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
 
 interface Props {
@@ -76,7 +75,6 @@ const ogImage = new URL(`/og-${lang}.png`, Astro.site);
       <div class="absolute -bottom-40 left-1/4 size-[28rem] rounded-full blur-3xl" style="background: var(--blob-3)"></div>
     </div>
     <slot />
-    <Analytics />
     <SpeedInsights />
   </body>
 </html>
